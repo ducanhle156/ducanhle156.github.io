@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Anh Le</title>
 <meta name="description" content="Anh Le — PhD student at North Dakota State University working on vision foundation models for scientific imaging.">
-<link rel="stylesheet" href="style.css?v=3">
+<link rel="stylesheet" href="style.css?v=4">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f4f1ea'/%3E%3Ccircle cx='50' cy='50' r='34' fill='none' stroke='%23b04a25' stroke-width='6'/%3E%3Cpath d='M30 55 Q45 35 62 50 T78 42' fill='none' stroke='%230f1419' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
 </head>
 <body>
@@ -74,6 +74,7 @@
       <div class="cb">
         <span class="status">Benchmark · results online</span>
         <h3>Solar filament segmentation</h3>
+        <p class="why">A hackathon entry that became a controlled benchmark.</p>
         <p>From-scratch baselines (U-Net, EdgeAttNet, ConvNeXt, YOLO) versus zero-shot, frozen, LoRA-adapted and fully fine-tuned DINOv3 / SAM 2 encoders on 958 GONG H-alpha full-disk images (MAGFiLO). Every arm changes one thing; results reported on two rubrics with full-disk galleries.</p>
         <div class="links"><span>Details →</span></div>
       </div>
@@ -83,6 +84,7 @@
       <div class="cb">
         <span class="status">In progress</span>
         <h3>Domain-adaptive pretraining on unlabeled H-alpha</h3>
+        <p class="why">Is the encoder held back by how it was adapted, or by what it was pretrained on?</p>
         <p>Masked-image pretraining of the SAM 2 Hiera encoder on a large unlabeled GONG corpus before fine-tuning, to test whether in-domain self-supervision moves the needle beyond LoRA on the labeled set.</p>
         <div class="links"><span>Details →</span></div>
       </div>
@@ -92,6 +94,7 @@
       <div class="cb">
         <span class="status">Benchmark · results online</span>
         <h3>Seismic fault segmentation</h3>
+        <p class="why">Does the filament recipe carry to a domain with different physics?</p>
         <p>Frozen, LayerNorm-only, LoRA and fully fine-tuned DINOv3 encoders versus a from-scratch U-Net, trained on synthetic FaultSeg3D volumes and tested on real CRACKS field sections. More adaptation wins on synthetic data and loses on real data; the foundation model pays off when labels are scarce.</p>
         <div class="links"><span>Details →</span></div>
       </div>
@@ -101,6 +104,7 @@
       <div class="cb">
         <span class="status">In progress</span>
         <h3>Surface-velocity tracking from UAV footage</h3>
+        <p class="why">Graduate research: measuring river flow without putting an instrument in the water.</p>
         <p>Segmenting and tracking natural tracers (leaves, foam) in top-down drone video of a river to recover a surface-velocity field, cross-checked against PIV and ADCP/ADV measurements. Feeds a physics-informed network that inverts channel bathymetry from video alone.</p>
         <div class="links"><span>Details →</span></div>
       </div>
@@ -110,6 +114,7 @@
       <div class="cb">
         <span class="status">Team project &middot; Jun 2026 &ndash; Present</span>
         <h3>YourEyes &mdash; indoor navigation by voice</h3>
+        <p class="why">A class project the team wanted to turn into a product.</p>
         <p>An iPhone app that walks a blind user to a room by voice. Camera frames plus heading and altitude go to a FastAPI backend, which localises the user with DINOv2 embeddings against a map of anchor photographs and returns the next heading and step count. LiDAR obstacle warnings run on-device.</p>
         <div class="links"><span>Details &rarr;</span></div>
       </div>
