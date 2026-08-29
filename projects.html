@@ -28,7 +28,7 @@
 <p class="lede">Ongoing research projects. Each has a results site or repository you can open for the full detail.</p>
 
 <section class="proj" id="solar-filament">
-<h2>Solar filament segmentation with foundation models</h2>
+<h2>Solar filament segmentation</h2>
 <span class="status">Benchmark · results online · 2026</span>
 <p>Can a vision foundation model pretrained on everyday photographs segment thin, faint filaments on the Sun better than a CNN trained from scratch — and how much of the encoder has to change? A controlled benchmark on 958 GONG H-alpha full-disk images (MAGFiLO annotations): every arm changes exactly one thing, 5 folds × 3 seeds, scored on pixel, skeleton and object-level metrics.</p>
 <p><b>Result:</b> a SAM 2 encoder with 0.43 % of its weights adapted (LoRA) reaches Dice 0.63 — above full fine-tuning of the same encoder (0.60) and a from-scratch U-Net (0.62). The decoder matters more than the backbone; full fine-tuning overfits on ~650 training images.</p>
