@@ -13,7 +13,7 @@
   <a class="logo" href="#top">ANH LE</a>
   <div class="links">
     <a href="#about">About</a>
-    <a href="#research">Projects</a>
+    <a href="projects.html">Projects</a>
     <a href="resume.pdf">Resume</a>
     <a href="#contact">Contact</a>
   </div>
@@ -29,7 +29,7 @@
     <h1 class="name"><span class="italic">Anh Le</span></h1>
     <p class="tagline">PhD student working on computer vision for scientific imaging. My current work adapts foundation models such as DINOv3 and SAM 2 to solar and seismic data, with an emphasis on fair, reproducible comparisons.</p>
     <div class="cta-row">
-      <a class="btn primary" href="#research">Projects</a>
+      <a class="btn primary" href="projects.html">Projects</a>
       <a class="btn" href="https://github.com/ducanhle156">GitHub</a>
       <a class="btn" href="resume.pdf">Resume</a>
     </div>
@@ -66,33 +66,33 @@
 
 <section id="research">
   <h2>Projects</h2>
-  <p class="lede">Ongoing projects. Each one has a results site or repository you can open.</p>
+  <p class="lede">Ongoing projects — click a card for key figures and links.</p>
   <div class="rcards">
-    <a class="rcard" href="projects/solar-filament.html" target="_blank" rel="noopener">
+    <a class="rcard" href="projects.html#solar-filament">
       <img src="assets/proj_filament.jpg" alt="Best / median / worst filament predictions against ground truth">
       <div class="cb">
         <span class="status">Benchmark · results online</span>
         <h3>Solar filament segmentation with foundation models</h3>
         <p>From-scratch baselines (U-Net, EdgeAttNet, ConvNeXt, YOLO) versus zero-shot, frozen, LoRA-adapted and fully fine-tuned DINOv3 / SAM 2 encoders on 958 GONG H-alpha full-disk images (MAGFiLO). Every arm changes one thing; results reported on two rubrics with full-disk galleries.</p>
-        <div class="links"><span>Read the story ↗</span></div>
+        <div class="links"><span>Details →</span></div>
       </div>
     </a>
-    <a class="rcard" href="https://github.com/ducanhle156/solar-filament-segmentation">
+    <a class="rcard" href="projects.html#dapt">
       <img src="assets/proj_dapt.jpg" alt="Preprocessing steps on an unlabeled H-alpha frame">
       <div class="cb">
         <span class="status">In progress</span>
         <h3>Domain-adaptive pretraining on unlabeled H-alpha</h3>
         <p>Masked-image pretraining of the SAM 2 Hiera encoder on a large unlabeled GONG corpus before fine-tuning, to test whether in-domain self-supervision moves the needle beyond LoRA on the labeled set.</p>
-        <div class="links"><span>Code →</span></div>
+        <div class="links"><span>Details →</span></div>
       </div>
     </a>
-    <a class="rcard" href="https://github.com/ducanhle156">
+    <a class="rcard" href="projects.html#fault">
       <img src="assets/proj_fault.jpg" alt="Seismic section with fault predictions">
       <div class="cb">
         <span class="status">In progress</span>
         <h3>Does a solar-adapted encoder transfer to seismic faults?</h3>
         <p>A DINOv3 encoder LoRA-adapted to solar filaments is compared with the raw encoder as initialisation for seismic fault segmentation — another thin, curvilinear target in a very different domain — on FaultSeg3D and real-world CRACKS sections.</p>
-        <div class="links"><span>GitHub →</span></div>
+        <div class="links"><span>Details →</span></div>
       </div>
     </a>
   </div>

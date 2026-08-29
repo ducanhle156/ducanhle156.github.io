@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projects · Anh Le</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.proj{padding:2rem 0 1rem;scroll-margin-top:90px}
+.proj .status{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--rust)}
+.proj p{max-width:52rem;font-weight:300;color:var(--ink-soft);line-height:1.7;margin:.6rem 0 1rem}
+.proj p b{color:var(--ink);font-weight:500}
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:1.2rem;margin:1rem 0 1.2rem}
+.figs figure{background:#fff}.figs img{aspect-ratio:4/3;object-fit:contain;background:#fff}
+.kv{display:flex;gap:.8rem;flex-wrap:wrap;margin:.5rem 0 1rem}
+.kv a{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--ink);color:var(--ink);padding:.55rem .9rem}
+.kv a:hover{background:var(--rust);border-color:var(--rust);color:var(--paper);text-decoration:none}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a class="logo" href="index.html">ANH LE</a>
+  <div class="links"><a href="index.html#about">About</a><a href="projects.html" class="active">Projects</a><a href="resume.pdf">Resume</a><a href="index.html#contact">Contact</a></div>
+</nav>
+<main>
+<h1>Projects</h1>
+<p class="lede">Ongoing research projects. Each has a results site or repository you can open for the full detail.</p>
+
+<section class="proj" id="solar-filament">
+<h2>Solar filament segmentation with foundation models</h2>
+<span class="status">Benchmark · results online · 2026</span>
+<p>Can a vision foundation model pretrained on everyday photographs segment thin, faint filaments on the Sun better than a CNN trained from scratch — and how much of the encoder has to change? A controlled benchmark on 958 GONG H-alpha full-disk images (MAGFiLO annotations): every arm changes exactly one thing, 5 folds × 3 seeds, scored on pixel, skeleton and object-level metrics.</p>
+<p><b>Result:</b> a SAM 2 encoder with 0.43 % of its weights adapted (LoRA) reaches Dice 0.63 — above full fine-tuning of the same encoder (0.60) and a from-scratch U-Net (0.62). The decoder matters more than the backbone; full fine-tuning overfits on ~650 training images.</p>
+<div class="figs">
+  <figure><a class="lb" href="assets/sf/fig3_all_arms_comparison.jpg" data-cap="Nine arms on the same split"><img src="assets/sf/fig3_all_arms_comparison.jpg" alt="All arms comparison"></a><figcaption>Nine arms on the same split — blue from scratch, orange DINOv3, green SAM 2.</figcaption></figure>
+  <figure><a class="lb" href="assets/sf/fig4_lora_vs_full_finetune.jpg" data-cap="LoRA vs full fine-tune"><img src="assets/sf/fig4_lora_vs_full_finetune.jpg" alt="LoRA vs full fine-tune"></a><figcaption>Same encoder, decoder and data; only the number of trainable encoder weights changes.</figcaption></figure>
+  <figure><a class="lb" href="assets/sf/fig7_same_disks_all_arms.jpg" data-cap="Same test disks, four arms"><img src="assets/sf/fig7_same_disks_all_arms.jpg" alt="Same disks, four arms"></a><figcaption>What the models draw: same test disks, four arms (orange hit, blue missed, red false positive).</figcaption></figure>
+</div>
+<div class="kv">
+  <a href="https://ducanhle156.github.io/solar-filament-segmentation/">Full results gallery ↗</a>
+  <a href="https://github.com/ducanhle156/solar-filament-segmentation">GitHub · figures, tables, inference script ↗</a>
+</div>
+</section>
+
+<section class="proj" id="dapt">
+<h2>Self-supervised pretraining on unlabeled H-alpha</h2>
+<span class="status">In progress · 2026</span>
+<p>A masked-image-modelling stage (SimMIM-style) on the SAM 2 Hiera encoder over 106,871 unlabeled GONG H-alpha frames, run before the LoRA fine-tune above and evaluated on the same 5 folds — so the delta isolates the pretraining. Includes the corpus selection, quality gate and CPU preprocessing pipeline for the unlabeled archive.</p>
+<div class="figs">
+  <figure><a class="lb" href="assets/proj_dapt.jpg" data-cap="Preprocessing steps on one unlabeled frame"><img src="assets/proj_dapt.jpg" alt="Preprocessing steps"></a><figcaption>Preprocessing steps on one unlabeled frame: limb fit, limb-darkening removal, normalisation.</figcaption></figure>
+</div>
+<div class="kv"><a href="https://github.com/ducanhle156/solar-filament-segmentation#8-in-progress--self-supervised-pretraining-on-100k-unlabeled-disks">Status in the repo ↗</a></div>
+</section>
+
+<section class="proj" id="fault">
+<h2>Does a solar-adapted encoder transfer to seismic faults?</h2>
+<span class="status">In progress · 2026</span>
+<p>A DINOv3 encoder LoRA-adapted to solar filaments is compared with the raw DINOv3 encoder as the initialisation for seismic fault segmentation — another thin, curvilinear target in a very different domain. Three arms identical in every hyperparameter except the initialisation; trained on FaultSeg3D synthetic slices, evaluated on held-out volumes and zero-shot on real-world CRACKS field sections.</p>
+<div class="figs">
+  <figure><a class="lb" href="assets/proj_fault.jpg" data-cap="Seismic section with fault predictions"><img src="assets/proj_fault.jpg" alt="Seismic section"></a><figcaption>A CRACKS field section with fault predictions.</figcaption></figure>
+</div>
+</section>
+
+<p class="back"><a href="index.html">← home</a></p>
+</main>
+<footer>Anh Le · North Dakota State University · Solar data: MAGFiLO v1.0 (Ahmadzadeh et al., 2024), NSO GONG (CC BY 4.0)</footer>
+<div id="lightbox" hidden><img alt=""><div class="cap"></div></div>
+<script>
+(function(){var lb=document.getElementById('lightbox'),img=lb.querySelector('img'),cap=lb.querySelector('.cap');
+document.addEventListener('click',function(e){var a=e.target.closest('a.lb');if(a){e.preventDefault();img.src=a.getAttribute('href');cap.textContent=a.dataset.cap||'';lb.hidden=false;document.body.style.overflow='hidden';}else if(e.target.closest('#lightbox')){lb.hidden=true;img.src='';document.body.style.overflow='';}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!lb.hidden){lb.hidden=true;img.src='';document.body.style.overflow='';}});})();
+</script>
+</body>
+</html>
