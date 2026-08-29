@@ -16,8 +16,10 @@
 .kv{display:flex;gap:.8rem;flex-wrap:wrap;margin:.5rem 0 1rem}
 .kv a{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--ink);color:var(--ink);padding:.55rem .9rem}
 .kv a:hover{background:var(--rust);border-color:var(--rust);color:var(--paper);text-decoration:none}
-.demo{max-width:400px;margin:1rem 0 1.2rem}
-.demo video{width:100%;display:block;background:#000}
+.demorow{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:1.4rem;align-items:center;max-width:1000px;margin:1rem 0 1.2rem}
+.demorow figure{background:#fff}
+.demorow video{width:100%;display:block;background:#000}
+@media (max-width:860px){.demorow{grid-template-columns:1fr}.demorow .vid{max-width:330px}}
 </style>
 </head>
 <body>
@@ -103,10 +105,10 @@
 <p>An iPhone app that walks a blind user to a room inside a building, entirely by voice. The user says where they want to go; the phone sends bursts of camera frames together with true heading and altitude to a FastAPI backend, which works out where they are standing by matching those frames against stored reference photographs using <b>DINOv2</b> embeddings, and answers with the next instruction &mdash; a compass heading and a step count. Obstacle warnings run on the phone itself, from the LiDAR depth map, so they keep working even when the network does not.</p>
 <p><b>How the building is mapped:</b> the floor is represented as a graph of <b>anchor nodes</b> &mdash; points in the corridor where reference photographs were taken, each stored with its GPS position, altitude and the heading the camera was facing. Localisation is a nearest-neighbour search over those embeddings (pgvector, cosine) narrowed first by a spatial filter, and aggregated across the three frames in a burst so that one bad frame cannot move the user.</p>
 <p class="figlab">Demo</p>
-<figure class="demo">
-  <video controls preload="metadata" playsinline poster="assets/ye/demo-poster.jpg" src="assets/ye/demo.mp4"></video>
-  <figcaption>Two and a half minutes with sound: speaking the destination, confirming it, then walking to room 320 while the app calls out each turn.</figcaption>
-</figure>
+<div class="demorow">
+  <figure><a class="lb" href="assets/ye/route-example.jpg" data-cap="The route walked in the video: anchor nodes along the third-floor corridor, ending at room 320"><img src="assets/ye/route-example.jpg" alt="Third-floor plan with the walked route highlighted through a chain of anchor nodes, ending at room 320"></a><figcaption>The route being walked in the video &mdash; anchor nodes along the corridor, ending at room 320.</figcaption></figure>
+  <figure class="vid"><video controls preload="metadata" playsinline poster="assets/ye/demo-poster.jpg" src="assets/ye/demo.mp4"></video><figcaption>Two and a half minutes with sound: speaking the destination, confirming it, then walking the route on the left while the app calls out each turn.</figcaption></figure>
+</div>
 <p class="figlab">How it works</p>
 <div class="figs figs2">
   <figure><a class="lb" href="assets/ye/anchor-graph.jpg" data-cap="The third floor as a graph: anchor nodes (purple) where reference photographs were taken, joined by the walkable edges between them"><img src="assets/ye/anchor-graph.jpg" alt="Third-floor building plan overlaid with anchor nodes and the walkable edges connecting them"></a><figcaption>The floor as a graph: anchor nodes where reference photographs were taken, joined by the walkable edges between them.</figcaption></figure>
