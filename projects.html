@@ -77,6 +77,24 @@
 </div>
 </section>
 
+<section class="proj" id="uav-tracking">
+<h2>Surface-velocity tracking from UAV river footage</h2>
+<span class="status">In progress · 2026</span>
+<p>Measuring how fast a river flows without putting an instrument in the water. A drone hovers over a reach and films the surface; natural tracers (leaves, foam, debris) are segmented and tracked frame to frame — each tracer gets a temporal mask, a bounding box, an ID and a velocity — and the resulting paths are converted from pixels to metres per second through the georeferenced orthomosaic. The output is a sparse surface-velocity field along the tracer trajectories.</p>
+<p><b>Why it matters:</b> the surface velocities feed a downstream pipeline (power-law / entropy conversion to depth-averaged velocity, then a physics-informed neural network) that inverts channel bathymetry from video alone, cross-checked against ADCP and ADV field measurements and a PIVlab particle-image-velocimetry run on the same footage.</p>
+<p class="figlab">Data</p>
+<div class="figs figs2">
+  <figure><a class="lb" href="assets/uav/fig0_orthomosaic.jpg" data-cap="Top-down drone orthomosaic of the surveyed reach"><img src="assets/uav/fig0_orthomosaic.jpg" alt="Top-down drone orthomosaic of a river reach"></a><figcaption>Top-down drone orthomosaic of the surveyed reach — the georeference that turns pixel tracks into metres.</figcaption></figure>
+  <figure><a class="lb" href="assets/uav/fig1_tracking_annot.jpg" data-cap="What the tracker outputs per tracer: temporal mask, bounding box, ID and velocity, in a frame-anchored coordinate system"><img src="assets/uav/fig1_tracking_annot.jpg" alt="Annotated frame showing a tracer's temporal mask, bounding box, ID, velocity and the coordinate origin"></a><figcaption>What the tracker outputs per tracer: a temporal mask and bounding box, an ID with velocity, and the path it leaves — all in a frame-anchored coordinate system.</figcaption></figure>
+</div>
+<p class="figlab">Results</p>
+<div class="figs">
+  <figure><a class="lb" href="assets/uav/fig2_particle_tracking.jpg" data-cap="Tracked leaves with per-tracer surface velocity (cm/s) over a single frame"><img src="assets/uav/fig2_particle_tracking.jpg" alt="Drone frame with tracked leaf trajectories and per-tracer velocities in cm/s"></a><figcaption>Tracked leaves and their trajectories over one frame, each labelled with its surface velocity in cm/s.</figcaption></figure>
+  <figure><a class="lb" href="assets/uav/fig3_pivlab.jpg" data-cap="PIVlab particle-image velocimetry on the same footage: vector field (green) and streamlines (yellow)"><img src="assets/uav/fig3_pivlab.jpg" alt="PIVlab vector field and streamlines on the same footage"></a><figcaption>Cross-check: PIVlab particle-image velocimetry on the same footage — vector field (green) and streamlines (yellow).</figcaption></figure>
+  <figure><a class="lb" href="assets/uav/fig4_framework.jpg" data-cap="Project framework: field measurements → velocity evaluation → PINN → bathymetry inversion with uncertainty quantification"><img src="assets/uav/fig4_framework.jpg" alt="Framework diagram: field measurements, velocity evaluation, physics-informed neural network, flow dynamics"></a><figcaption>Where the tracking sits: field measurements → velocity evaluation → PINN → bathymetry inversion with uncertainty quantification.</figcaption></figure>
+</div>
+</section>
+
 <p class="back"><a href="index.html">← back to home</a></p>
 </main>
 <footer>Anh Le · North Dakota State University · Solar data: MAGFiLO v1.0 (Ahmadzadeh et al., 2024), NSO GONG (CC BY 4.0) · Seismic data: FaultSeg3D (Wu et al., 2019), CRACKS (Prabhushankar et al., 2024, CC BY 4.0)</footer>
