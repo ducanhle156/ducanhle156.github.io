@@ -32,6 +32,11 @@
 <span class="status">Benchmark · results online · 2026</span>
 <p>Can a vision foundation model pretrained on everyday photographs segment thin, faint filaments on the Sun better than a CNN trained from scratch — and how much of the encoder has to change? A controlled benchmark on 958 GONG H-alpha full-disk images (MAGFiLO annotations): every arm changes exactly one thing, 5 folds × 3 seeds, scored on pixel, skeleton and object-level metrics.</p>
 <p><b>Result:</b> a SAM 2 encoder with 0.43 % of its weights adapted (LoRA) reaches Dice 0.63 — above full fine-tuning of the same encoder (0.60) and a from-scratch U-Net (0.62). The decoder matters more than the backbone; full fine-tuning overfits on ~650 training images.</p>
+<p class="figlab">Data</p>
+<div class="figs figs2">
+  <figure><a class="lb" href="assets/proj_filament.jpg" data-cap="GONG H-alpha full disk (left) and the SAM 2 + LoRA prediction with the ground-truth outline (right)"><img src="assets/proj_filament.jpg?v=4" alt="GONG H-alpha full disk and SAM 2 + LoRA filament prediction with ground-truth outline"></a><figcaption>A GONG H-alpha full disk (left) and the SAM 2 + LoRA prediction on it (right) with the MAGFiLO ground-truth outline.</figcaption></figure>
+</div>
+<p class="figlab">Results</p>
 <div class="figs">
   <figure><a class="lb" href="assets/sf/fig3_all_arms_comparison.jpg" data-cap="Nine arms on the same split"><img src="assets/sf/fig3_all_arms_comparison.jpg" alt="All arms comparison"></a><figcaption>Nine arms on the same split — blue from scratch, orange DINOv3, green SAM 2.</figcaption></figure>
   <figure><a class="lb" href="assets/sf/fig4_lora_vs_full_finetune.jpg" data-cap="LoRA vs full fine-tune"><img src="assets/sf/fig4_lora_vs_full_finetune.jpg" alt="LoRA vs full fine-tune"></a><figcaption>Same encoder, decoder and data; only the number of trainable encoder weights changes.</figcaption></figure>
