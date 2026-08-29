@@ -20,6 +20,11 @@
 .demorow figure{background:#fff}
 .demorow video{width:100%;display:block;background:#000}
 @media (max-width:860px){.demorow{grid-template-columns:1fr}.demorow .vid{max-width:330px}}
+.playcta{display:flex;flex-direction:column;gap:.3rem;align-items:center;text-align:center;font-family:'Fraunces',Georgia,serif;text-transform:none;letter-spacing:0;cursor:pointer;padding:.85rem .9rem;background:var(--paper-warm);border-top:1px solid var(--line);transition:background .2s}
+.playcta:hover{background:#e3dcc8}
+.playcta .go{font-size:1.35rem;font-weight:600;line-height:1.15;color:var(--rust)}
+.playcta .go i{font-style:normal;color:var(--ochre)}
+.playcta .sub{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal)}
 </style>
 </head>
 <body>
@@ -107,7 +112,7 @@
 <p class="figlab">Demo</p>
 <div class="demorow">
   <figure><a class="lb" href="assets/ye/route-example.jpg" data-cap="The route walked in the video: anchor nodes along the third-floor corridor, ending at room 320"><img src="assets/ye/route-example.jpg" alt="Third-floor plan with the walked route highlighted through a chain of anchor nodes, ending at room 320"></a><figcaption>The route being walked in the video &mdash; anchor nodes along the corridor, ending at room 320.</figcaption></figure>
-  <figure class="vid"><video controls preload="metadata" playsinline poster="assets/ye/demo-poster.jpg" src="assets/ye/demo.mp4"></video><figcaption>Two and a half minutes with sound: speaking the destination, confirming it, then walking the route on the left while the app calls out each turn.</figcaption></figure>
+  <figure class="vid"><video controls preload="metadata" playsinline poster="assets/ye/demo-poster.jpg" src="assets/ye/demo.mp4"></video><figcaption class="playcta"><span class="go"><i>&#9654;</i> Play the demo</span><span class="sub">2:29 &middot; with sound &middot; walking the route on the left</span></figcaption></figure>
 </div>
 <p class="figlab">How it works</p>
 <div class="figs figs2">
@@ -123,7 +128,7 @@
 <script>
 (function(){var lb=document.getElementById('lightbox'),img=lb.querySelector('img'),cap=lb.querySelector('.cap');
 document.addEventListener('click',function(e){var a=e.target.closest('a.lb');if(a){e.preventDefault();img.src=a.getAttribute('href');cap.textContent=a.dataset.cap||'';lb.hidden=false;document.body.style.overflow='hidden';}else if(e.target.closest('#lightbox')){lb.hidden=true;img.src='';document.body.style.overflow='';}});
-document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!lb.hidden){lb.hidden=true;img.src='';document.body.style.overflow='';}});})();
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!lb.hidden){lb.hidden=true;img.src='';document.body.style.overflow='';}});document.addEventListener('click',function(e){var c=e.target.closest('.playcta');if(c){var v=c.parentElement.querySelector('video');if(v){v.play();v.scrollIntoView({block:'center'});}}});})();
 </script>
 </body>
 </html>
