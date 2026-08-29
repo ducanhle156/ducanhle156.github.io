@@ -105,6 +105,7 @@ section{padding:3rem 0}
 .rcard{border:1px solid var(--line);background:var(--paper-warm);display:flex;flex-direction:column;transition:all .25s;color:var(--ink)}
 .rcard:hover{transform:translate(-3px,-3px);box-shadow:6px 6px 0 var(--ink);border-color:var(--ink);text-decoration:none}
 .rcard img{width:100%;aspect-ratio:4/3;object-fit:cover;object-position:top;border-bottom:1px solid var(--line);background:#fff}
+.rcard img.tall{aspect-ratio:auto}
 .rcard .cb{padding:1.2rem 1.3rem 1.4rem;display:flex;flex-direction:column;gap:.6rem;flex:1}
 .rcard .status{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--rust)}
 .rcard h3{font-size:1.25rem;font-weight:500;line-height:1.2}
