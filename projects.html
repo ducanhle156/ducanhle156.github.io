@@ -34,11 +34,12 @@
 </nav>
 <main>
 <h1>Projects</h1>
-<p class="lede">Ongoing research projects. Each has a results site or repository you can open for the full detail.</p>
+<p class="lede">What I am working on, and why each one started. Most have a results site or repository you can open for the full detail.</p>
 
 <section class="proj" id="solar-filament">
 <h2>Solar filament segmentation</h2>
 <span class="status">Benchmark · results online · 2026</span>
+<p><b>Why:</b> it started as a hackathon entry. Working to a fixed problem and a hard deadline forced a design where every arm changes exactly one thing &mdash; and that discipline is what turned a competition entry into a benchmark worth keeping.</p>
 <p>Can a vision foundation model pretrained on everyday photographs segment thin, faint filaments on the Sun better than a CNN trained from scratch — and how much of the encoder has to change? A controlled benchmark on 958 GONG H-alpha full-disk images (MAGFiLO annotations): every arm changes exactly one thing, 5 folds × 3 seeds, scored on pixel, skeleton and object-level metrics.</p>
 <p><b>Result:</b> a SAM 2 encoder with 0.43 % of its weights adapted (LoRA) reaches Dice 0.63 — above full fine-tuning of the same encoder (0.60) and a from-scratch U-Net (0.62). The decoder matters more than the backbone; full fine-tuning overfits on ~650 training images.</p>
 <p class="figlab">Data</p>
@@ -60,6 +61,7 @@
 <section class="proj" id="dapt">
 <h2>Self-supervised pretraining on unlabeled H-alpha</h2>
 <span class="status">In progress · 2026</span>
+<p><b>Why:</b> the LoRA result above leaves one question open. With only ~650 labelled disks, is the encoder held back by <i>how</i> it was adapted, or by <i>what</i> it was pretrained on? A 106,871-frame unlabelled archive of the same instrument is the cleanest way to find out.</p>
 <p>A masked-image-modelling stage (SimMIM-style) on the SAM 2 Hiera encoder over 106,871 unlabeled GONG H-alpha frames, run before the LoRA fine-tune above and evaluated on the same 5 folds — so the delta isolates the pretraining. Includes the corpus selection, quality gate and CPU preprocessing pipeline for the unlabeled archive.</p>
 <div class="kv"><a href="https://github.com/ducanhle156/solar-filament-segmentation#8-in-progress--self-supervised-pretraining-on-100k-unlabeled-disks">Status in the repo ↗</a></div>
 </section>
@@ -67,6 +69,7 @@
 <section class="proj" id="fault">
 <h2>Seismic fault segmentation</h2>
 <span class="status">Benchmark · results online · 2026</span>
+<p><b>Why:</b> solar filaments and seismic faults are the same shape problem in different data &mdash; thin, faint, curvilinear structures that a human traces by hand and that occupy a tiny fraction of the pixels. After the filament benchmark the obvious question was whether the recipe carries across to a domain with entirely different physics, or whether it was tuned to the Sun.</p>
 <p>How much of a DINOv3 encoder has to change to segment faults — thin, tilted breaks in seismic images? Frozen, LayerNorm-only, LoRA (r = 4 / 16 / 64) and full fine-tuning, all under one recipe, trained on synthetic FaultSeg3D volumes and tested on held-out volumes and on real CRACKS field sections (zero-shot and after a few real labels). A from-scratch U-Net is the control.</p>
 <p><b>Result:</b> on synthetic data accuracy rises with how much of the encoder is trained (IoU 0.61 frozen → 0.66 LoRA → 0.71 full). On real data the order reverses: the lightly adapted models transfer best and the fully fine-tuned one is worse and unstable across seeds. With 200 training volumes a 7.8 M U-Net ties LoRA-DINOv3; with 10 it collapses (0.47 vs 0.55) — the foundation model buys label efficiency, not peak accuracy.</p>
 <p class="figlab">Data</p>
@@ -89,6 +92,7 @@
 <section class="proj" id="uav-tracking">
 <h2>Surface-velocity tracking from UAV river footage</h2>
 <span class="status">In progress · 2026</span>
+<p><b>Why:</b> graduate research &mdash; the computer-vision half of a hydrology problem. Measuring river flow normally means putting an instrument in the water; if the surface can be tracked accurately enough from a drone, the physics-informed inversion downstream has something to run on without anyone getting wet.</p>
 <p>Measuring how fast a river flows without putting an instrument in the water. A drone hovers over a reach and films the surface; natural tracers (leaves, foam, debris) are segmented and tracked frame to frame — each tracer gets a temporal mask, a bounding box, an ID and a velocity — and the resulting paths are converted from pixels to metres per second through the georeferenced orthomosaic. The output is a sparse surface-velocity field along the tracer trajectories.</p>
 <p><b>Why it matters:</b> the surface velocities feed a downstream pipeline (power-law / entropy conversion to depth-averaged velocity, then a physics-informed neural network) that inverts channel bathymetry from video alone, cross-checked against ADCP and ADV field measurements and a PIVlab particle-image-velocimetry run on the same footage.</p>
 <p class="figlab">Data</p>
@@ -107,6 +111,7 @@
 <section class="proj" id="youreyes">
 <h2>YourEyes &mdash; indoor navigation by voice</h2>
 <span class="status">Team project &middot; video demo &middot; 2026</span>
+<p><b>Why:</b> it began as a class project the team wanted to take further into a product. Indoors, where GPS stops being useful, a blind user has no equivalent of the turn-by-turn guidance sighted people take for granted &mdash; so the question was whether a phone's own camera and sensors could close that gap.</p>
 <p>An iPhone app that walks a blind user to a room inside a building, entirely by voice. The user says where they want to go; the phone sends bursts of camera frames together with true heading and altitude to a FastAPI backend, which works out where they are standing by matching those frames against stored reference photographs using <b>DINOv2</b> embeddings, and answers with the next instruction &mdash; a compass heading and a step count. Obstacle warnings run on the phone itself, from the LiDAR depth map, so they keep working even when the network does not.</p>
 <p><b>How the building is mapped:</b> the floor is represented as a graph of <b>anchor nodes</b> &mdash; points in the corridor where reference photographs were taken, each stored with its GPS position, altitude and the heading the camera was facing. Localisation is a nearest-neighbour search over those embeddings (pgvector, cosine) narrowed first by a spatial filter, and aggregated across the three frames in a burst so that one bad frame cannot move the user.</p>
 <p class="figlab">Demo</p>
