@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solar filament segmentation · Anh Le</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+.story h2{margin-top:3.5rem}
+.story p{max-width:52rem;font-weight:300;color:var(--ink-soft);line-height:1.7;margin:.8rem 0}
+.story p b{color:var(--ink);font-weight:500}
+.story .callout{border-left:3px solid var(--rust);padding:.8rem 1.2rem;background:var(--paper-warm);max-width:52rem;margin:1.5rem 0;font-size:1.1rem;color:var(--ink)}
+.story figure{margin:1.5rem 0;background:#fff}
+.story figure.narrow{max-width:560px}.story figure.mid{max-width:900px}
+.story ul{max-width:52rem;padding-left:1.3rem;font-weight:300;color:var(--ink-soft)}.story li{margin:.5rem 0}.story li b{color:var(--ink);font-weight:500}
+.kv{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0 2rem}
+.kv a{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--ink);color:var(--ink);padding:.6rem 1rem}
+.kv a:hover{background:var(--rust);border-color:var(--rust);color:var(--paper);text-decoration:none}
+table td:first-child{white-space:normal}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a class="logo" href="../index.html">ANH LE</a>
+  <div class="links"><a href="../index.html#about">About</a><a href="../index.html#research" class="active">Projects</a><a href="../resume.pdf">Resume</a><a href="../index.html#contact">Contact</a></div>
+</nav>
+<main class="story">
+<p class="mono" style="color:var(--rust);margin-bottom:1rem">Project · 2026</p>
+<h1>Solar filament segmentation <span class="italic">with foundation models</span></h1>
+<p class="lede">Can a vision foundation model pretrained on everyday photographs segment thin, faint filaments on the Sun better than a CNN trained from scratch — and how much of the encoder has to change? A controlled benchmark on 958 GONG H-alpha disks.</p>
+<div class="callout">Result: a SAM 2 encoder with <b>0.43 %</b> of its weights adapted (LoRA) reaches <b>Dice 0.63</b> — above full fine-tuning (0.60) and a from-scratch U-Net (0.62).</div>
+<div class="kv">
+  <a href="https://ducanhle156.github.io/solar-filament-segmentation/" target="_blank" rel="noopener">Full results gallery ↗</a>
+  <a href="https://github.com/ducanhle156/solar-filament-segmentation" target="_blank" rel="noopener">GitHub repo + inference script ↗</a>
+  <a href="https://github.com/ducanhle156/solar-filament-segmentation/releases/tag/v1.0" target="_blank" rel="noopener">Model checkpoint ↗</a>
+</div>
+
+<h2>The problem</h2>
+<p>Filaments are thin, dark, elongated threads on the solar disk. They cover about 2 % of the pixels, are often broken into fragments, and are annotated by hand — so pixel accuracy is meaningless (~0.98 for everything) and even IoU punishes a one-pixel boundary shift on a five-pixel-wide object.</p>
+<p><b>Data.</b> 958 GONG H-alpha full-disk images (2048 × 2048) with 6,560 filament annotations from the public MAGFiLO dataset; 71 filament-free disks kept as negatives. A frozen 5-fold split — every model sees the same folds.</p>
+<figure class="narrow"><a class="lb" href="../assets/sf/fig1_dataset_example_annotation.jpg" data-cap="One disk with its 24 annotated filaments"><img src="../assets/sf/fig1_dataset_example_annotation.jpg" alt="Annotated H-alpha disk"></a><figcaption>One disk with its 24 annotated filaments (red = mask, cyan = spine).</figcaption></figure>
+<p><b>Metrics, and why.</b> Dice (foreground overlap), clDice (skeleton overlap — does the model draw the spine?), and PQ (panoptic quality — did each filament come out as one object rather than three fragments?). Every number is a mean over test images, averaged over 5 folds, ± std across 3 seeds.</p>
+
+<h2>Model design</h2>
+<figure><a class="lb" href="../assets/sf/fig0_architecture.jpg" data-cap="The foundation-model arm"><img src="../assets/sf/fig0_architecture.jpg" alt="Architecture diagram"></a><figcaption>A frozen encoder (DINOv3 ViT-B/16 or SAM 2 Hiera-B+) feeds four intermediate feature maps to a 15 M-parameter FPN decoder. LoRA adapters (rank 4, on q/k/v/proj) are the only trainable encoder weights — under 0.5 % of the encoder. The benchmark chain changes exactly one thing per arm.</figcaption></figure>
+
+<h2>Every arm on the same split</h2>
+<figure><a class="lb" href="../assets/sf/fig3_all_arms_comparison.jpg" data-cap="Nine arms on the same split"><img src="../assets/sf/fig3_all_arms_comparison.jpg" alt="All arms comparison"></a><figcaption>Nine arms. Blue = from scratch, orange = DINOv3, green = SAM 2.</figcaption></figure>
+<div class="tbl"><table>
+<thead><tr><th>model</th><th>trainable</th><th>encoder trained</th><th>Dice</th><th>clDice</th><th>PQ</th></tr></thead>
+<tbody>
+<tr><td class="k">U-Net (scratch)</td><td>31.0 M</td><td>—</td><td>0.618</td><td class="best">0.723</td><td>0.320</td></tr>
+<tr><td class="k">DINOv3 frozen + linear</td><td>769</td><td>0 %</td><td>0.493</td><td>0.561</td><td>0.077</td></tr>
+<tr><td class="k">DINOv3 frozen + FPN</td><td>15.0 M</td><td>0 %</td><td>0.613</td><td>0.710</td><td>0.293</td></tr>
+<tr><td class="k">DINOv3 LoRA r4 + FPN</td><td>15.3 M</td><td>0.39 %</td><td>0.582*</td><td>0.673*</td><td>0.306</td></tr>
+<tr><td class="k"><b>SAM 2 LoRA r4 + FPN</b></td><td><b>5.4 M</b></td><td><b>0.43 %</b></td><td class="best">0.627</td><td>0.717</td><td class="best">0.330</td></tr>
+<tr><td class="k">SAM 2 full fine-tune</td><td>73.8 M</td><td>100 %</td><td>0.596</td><td>0.698</td><td>0.327</td></tr>
+</tbody></table></div>
+<p class="muted">* one of 15 DINOv3-LoRA runs collapsed (seed 1 / fold 1); the 14-run mean is Dice 0.60 / clDice 0.70.</p>
+<ul>
+<li><b>Decoder (linear → FPN):</b> a linear head on frozen DINOv3 features already finds the spines (clDice 0.56) but fragments every object (PQ 0.08). A multi-tap FPN fixes that: +0.15 clDice, PQ ×4. The decoder matters more than the backbone.</li>
+<li><b>LoRA on DINOv3:</b> small gain on healthy folds (+0.01 clDice, PQ 0.29 → 0.31), one collapsed run.</li>
+<li><b>Backbone (DINOv3 → SAM 2):</b> the hierarchical encoder is the better fit — its native 4/8/16/32 pyramid suits an FPN and it was pretrained for segmentation. Best arm on Dice, mIoU and PQ.</li>
+<li><b>LoRA vs full fine-tune:</b> updating all 69 M encoder weights is <i>worse</i> than updating 0.3 M (Dice 0.596 vs 0.627). With ~650 training images, full fine-tuning overfits; LoRA keeps the pretrained features.</li>
+</ul>
+
+<h2>The headline: LoRA beats full fine-tuning</h2>
+<figure class="mid"><a class="lb" href="../assets/sf/fig4_lora_vs_full_finetune.jpg" data-cap="LoRA vs full fine-tune"><img src="../assets/sf/fig4_lora_vs_full_finetune.jpg" alt="LoRA vs full fine-tune"></a><figcaption>Same encoder, same decoder, same data; only the number of encoder weights allowed to move changes.</figcaption></figure>
+<figure class="mid"><a class="lb" href="../assets/sf/fig5_paired_per_disk.jpg" data-cap="Paired per-disk comparison"><img src="../assets/sf/fig5_paired_per_disk.jpg" alt="Paired per-disk comparison"></a><figcaption>Paired per-disk comparison (887 filament-bearing test disks, seed 0). Against full fine-tuning, LoRA wins on 71 % of disks (mean +0.029 Dice). Against U-Net it wins on 63 % (+0.011): the gain over a strong CNN is real but small.</figcaption></figure>
+
+<h2>What the models actually draw</h2>
+<figure><a class="lb" href="../assets/sf/fig7_same_disks_all_arms.jpg" data-cap="Same test disks, four arms"><img src="../assets/sf/fig7_same_disks_all_arms.jpg" alt="Same disks, all arms"></a><figcaption>Same test disks, four arms (orange = hit, blue = missed, red = false positive). Rows: the busiest disk, the disk where LoRA is furthest ahead of U-Net, a typical disk, and the one where U-Net is furthest ahead. The hard cases are faint, short filaments near the limb — every model misses them.</figcaption></figure>
+<figure><a class="lb" href="../assets/sf/fig9_sam2_lora_prediction_detail.jpg" data-cap="SAM 2 LoRA on one disk"><img src="../assets/sf/fig9_sam2_lora_prediction_detail.jpg" alt="Prediction detail"></a><figcaption>SAM 2 LoRA on one disk: input, ground truth, stitched probability map (512-px tiles, no seams), thresholded outcome.</figcaption></figure>
+
+<h2>Ablations</h2>
+<figure class="narrow"><a class="lb" href="../assets/sf/fig6_tap_ablation.jpg" data-cap="Tap ablation"><img src="../assets/sf/fig6_tap_ablation.jpg" alt="Tap ablation"></a><figcaption>Which ViT layers to feed the decoder (frozen DINOv3, fold 0, 3 seeds). The final layer alone fails completely (clDice 0.05): a 16-px patch grid at layer 12 has no thin-structure detail left. Spreading taps across depth, biased early, works best.</figcaption></figure>
+<figure class="narrow"><a class="lb" href="../assets/sf/fig8_sam2_lora_training_curves.jpg" data-cap="Training curve"><img src="../assets/sf/fig8_sam2_lora_training_curves.jpg" alt="Training curves"></a><figcaption>SAM 2 LoRA training curve (one run): validation clDice plateaus around epoch 60–80; training stops on a patience rule, then a short LR anneal.</figcaption></figure>
+
+<h2>In progress</h2>
+<p>A masked-image-modelling stage (SimMIM-style, on the SAM 2 Hiera encoder) over <b>106,871 unlabeled GONG H-alpha frames</b> before the LoRA fine-tune above, evaluated on the same 5 folds so the delta isolates the pretraining. Results will be added when the runs finish.</p>
+
+<h2>Try it</h2>
+<p>A single self-contained script runs the best model on any H-alpha image: limb fit → limb-darkening removal → robust z-score → 512-px tiling with 25 % overlap → SAM 2 Hiera-B+ (LoRA r4) + FPN → averaged stitch → overlay. Verified to reproduce the benchmark's prediction on a held-out disk.</p>
+<figure class="narrow"><a class="lb" href="../assets/sf/example_overlay.jpg" data-cap="Script output on a test disk"><img src="../assets/sf/example_overlay.jpg" alt="Inference overlay"></a><figcaption>Script output on a test disk (orange = predicted filament).</figcaption></figure>
+<div class="kv">
+  <a href="https://github.com/ducanhle156/solar-filament-segmentation#try-it--run-the-best-model-on-an-h-alpha-image" target="_blank" rel="noopener">Inference script ↗</a>
+  <a href="https://ducanhle156.github.io/solar-filament-segmentation/" target="_blank" rel="noopener">Per-model galleries ↗</a>
+</div>
+<p class="back"><a href="../index.html#research">← back to projects</a></p>
+</main>
+<footer>Anh Le · North Dakota State University · Data: MAGFiLO v1.0 (Ahmadzadeh et al., 2024), NSO GONG (CC BY 4.0)</footer>
+<div id="lightbox" hidden><img alt=""><div class="cap"></div></div>
+<script>
+(function(){var lb=document.getElementById('lightbox'),img=lb.querySelector('img'),cap=lb.querySelector('.cap');
+document.addEventListener('click',function(e){var a=e.target.closest('a.lb');if(a){e.preventDefault();img.src=a.getAttribute('href');cap.textContent=a.dataset.cap||'';lb.hidden=false;document.body.style.overflow='hidden';}else if(e.target.closest('#lightbox')){lb.hidden=true;img.src='';document.body.style.overflow='';}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!lb.hidden){lb.hidden=true;img.src='';document.body.style.overflow='';}});})();
+</script>
+</body>
+</html>
