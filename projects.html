@@ -20,7 +20,7 @@
 <body>
 <nav class="topnav">
   <a class="logo" href="index.html">ANH LE</a>
-  <div class="links"><a href="index.html#about">About</a><a href="projects.html" class="active">Projects</a><a href="resume.pdf">Resume</a><a href="index.html#contact">Contact</a></div>
+  <div class="links"><a href="index.html">Home</a><a href="index.html#about">About</a><a href="projects.html" class="active">Projects</a><a href="resume.pdf">Resume</a><a href="index.html#contact">Contact</a></div>
 </nav>
 <main>
 <h1>Projects</h1>
@@ -46,9 +46,6 @@
 <h2>Self-supervised pretraining on unlabeled H-alpha</h2>
 <span class="status">In progress · 2026</span>
 <p>A masked-image-modelling stage (SimMIM-style) on the SAM 2 Hiera encoder over 106,871 unlabeled GONG H-alpha frames, run before the LoRA fine-tune above and evaluated on the same 5 folds — so the delta isolates the pretraining. Includes the corpus selection, quality gate and CPU preprocessing pipeline for the unlabeled archive.</p>
-<div class="figs">
-  <figure><a class="lb" href="assets/proj_dapt.jpg" data-cap="Preprocessing steps on one unlabeled frame"><img src="assets/proj_dapt.jpg" alt="Preprocessing steps"></a><figcaption>Preprocessing steps on one unlabeled frame: limb fit, limb-darkening removal, normalisation.</figcaption></figure>
-</div>
 <div class="kv"><a href="https://github.com/ducanhle156/solar-filament-segmentation#8-in-progress--self-supervised-pretraining-on-100k-unlabeled-disks">Status in the repo ↗</a></div>
 </section>
 
@@ -56,12 +53,9 @@
 <h2>Does a solar-adapted encoder transfer to seismic faults?</h2>
 <span class="status">In progress · 2026</span>
 <p>A DINOv3 encoder LoRA-adapted to solar filaments is compared with the raw DINOv3 encoder as the initialisation for seismic fault segmentation — another thin, curvilinear target in a very different domain. Three arms identical in every hyperparameter except the initialisation; trained on FaultSeg3D synthetic slices, evaluated on held-out volumes and zero-shot on real-world CRACKS field sections.</p>
-<div class="figs">
-  <figure><a class="lb" href="assets/proj_fault.jpg" data-cap="Seismic section with fault predictions"><img src="assets/proj_fault.jpg" alt="Seismic section"></a><figcaption>A CRACKS field section with fault predictions.</figcaption></figure>
-</div>
 </section>
 
-<p class="back"><a href="index.html">← home</a></p>
+<p class="back"><a href="index.html">← back to home</a></p>
 </main>
 <footer>Anh Le · North Dakota State University · Solar data: MAGFiLO v1.0 (Ahmadzadeh et al., 2024), NSO GONG (CC BY 4.0)</footer>
 <div id="lightbox" hidden><img alt=""><div class="cap"></div></div>
