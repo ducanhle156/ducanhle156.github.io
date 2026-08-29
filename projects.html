@@ -51,7 +51,7 @@
 </section>
 
 <section class="proj" id="fault">
-<h2>Seismic fault segmentation with foundation models</h2>
+<h2>Does a solar-adapted encoder transfer to seismic faults?</h2>
 <span class="status">Benchmark · results online · 2026</span>
 <p>How much of a DINOv3 encoder has to change to segment faults — thin, tilted breaks in seismic images? Frozen, LayerNorm-only, LoRA (r = 4 / 16 / 64) and full fine-tuning, all under one recipe, trained on synthetic FaultSeg3D volumes and tested on held-out volumes and on real CRACKS field sections (zero-shot and after a few real labels). A from-scratch U-Net is the control.</p>
 <p><b>Result:</b> on synthetic data accuracy rises with how much of the encoder is trained (IoU 0.61 frozen → 0.66 LoRA → 0.71 full). On real data the order reverses: the lightly adapted models transfer best and the fully fine-tuned one is worse and unstable across seeds. With 200 training volumes a 7.8 M U-Net ties LoRA-DINOv3; with 10 it collapses (0.47 vs 0.55) — the foundation model buys label efficiency, not peak accuracy.</p>
