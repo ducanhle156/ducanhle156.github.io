@@ -88,11 +88,11 @@
       </div>
     </a>
     <a class="rcard" href="projects.html#fault">
-      <img src="assets/proj_fault.jpg" alt="Seismic section with fault predictions">
+      <img src="assets/proj_fault.jpg" alt="Real seismic section with zero-shot fault prediction against the expert label">
       <div class="cb">
-        <span class="status">In progress</span>
-        <h3>Does a solar-adapted encoder transfer to seismic faults?</h3>
-        <p>A DINOv3 encoder LoRA-adapted to solar filaments is compared with the raw encoder as initialisation for seismic fault segmentation — another thin, curvilinear target in a very different domain — on FaultSeg3D and real-world CRACKS sections.</p>
+        <span class="status">Benchmark · results online</span>
+        <h3>Seismic fault segmentation with foundation models</h3>
+        <p>Frozen, LayerNorm-only, LoRA and fully fine-tuned DINOv3 encoders versus a from-scratch U-Net, trained on synthetic FaultSeg3D volumes and tested on real CRACKS field sections. More adaptation wins on synthetic data and loses on real data; the foundation model pays off when labels are scarce.</p>
         <div class="links"><span>Details →</span></div>
       </div>
     </a>

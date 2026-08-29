@@ -11,7 +11,8 @@
 .proj p{max-width:52rem;font-weight:300;color:var(--ink-soft);line-height:1.7;margin:.6rem 0 1rem}
 .proj p b{color:var(--ink);font-weight:500}
 .figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:1.2rem;margin:1rem 0 1.2rem}
-.figs figure{background:#fff}.figs img{aspect-ratio:4/3;object-fit:contain;background:#fff}
+.figs figure{background:#fff}.figs2{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.figlab{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-soft);opacity:.7;margin:1.2rem 0 -.4rem}.figs img{aspect-ratio:4/3;object-fit:contain;background:#fff}
 .kv{display:flex;gap:.8rem;flex-wrap:wrap;margin:.5rem 0 1rem}
 .kv a{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--ink);color:var(--ink);padding:.55rem .9rem}
 .kv a:hover{background:var(--rust);border-color:var(--rust);color:var(--paper);text-decoration:none}
@@ -50,14 +51,30 @@
 </section>
 
 <section class="proj" id="fault">
-<h2>Does a solar-adapted encoder transfer to seismic faults?</h2>
-<span class="status">In progress · 2026</span>
-<p>A DINOv3 encoder LoRA-adapted to solar filaments is compared with the raw DINOv3 encoder as the initialisation for seismic fault segmentation — another thin, curvilinear target in a very different domain. Three arms identical in every hyperparameter except the initialisation; trained on FaultSeg3D synthetic slices, evaluated on held-out volumes and zero-shot on real-world CRACKS field sections.</p>
+<h2>Seismic fault segmentation with foundation models</h2>
+<span class="status">Benchmark · results online · 2026</span>
+<p>How much of a DINOv3 encoder has to change to segment faults — thin, tilted breaks in seismic images? Frozen, LayerNorm-only, LoRA (r = 4 / 16 / 64) and full fine-tuning, all under one recipe, trained on synthetic FaultSeg3D volumes and tested on held-out volumes and on real CRACKS field sections (zero-shot and after a few real labels). A from-scratch U-Net is the control.</p>
+<p><b>Result:</b> on synthetic data accuracy rises with how much of the encoder is trained (IoU 0.61 frozen → 0.66 LoRA → 0.71 full). On real data the order reverses: the lightly adapted models transfer best and the fully fine-tuned one is worse and unstable across seeds. With 200 training volumes a 7.8 M U-Net ties LoRA-DINOv3; with 10 it collapses (0.47 vs 0.55) — the foundation model buys label efficiency, not peak accuracy.</p>
+<p class="figlab">Data</p>
+<div class="figs figs2">
+  <figure><a class="lb" href="assets/fs/fig1_synthetic.jpg" data-cap="Synthetic FaultSeg3D training slices with exact fault labels"><img src="assets/fs/fig1_synthetic.jpg" alt="Synthetic seismic slices and fault labels"></a><figcaption>Training data: synthetic FaultSeg3D slices (128 × 128) with exact fault labels — 200 volumes, 2.5-D input.</figcaption></figure>
+  <figure><a class="lb" href="assets/fs/fig0_real_section.jpg" data-cap="A real CRACKS section as distributed, and normalised with expert (blue) and practitioner-consensus (orange) labels"><img src="assets/fs/fig0_real_section.jpg" alt="Real CRACKS section with expert and practitioner labels"></a><figcaption>Test data: a real CRACKS section (F3 survey) with the expert label (blue) and the practitioner consensus (orange) — two humans agree at IoU ≈ 0.05.</figcaption></figure>
+</div>
+<p class="figlab">Results</p>
+<div class="figs">
+  <figure><a class="lb" href="assets/fs/fig3_adaptation_ladder.jpg" data-cap="How much of the encoder has to change? Synthetic (left) vs real data zero-shot (right)"><img src="assets/fs/fig3_adaptation_ladder.jpg" alt="IoU vs trainable encoder parameters, synthetic and real"></a><figcaption>Same decoder and data, only the number of trainable encoder weights changes — synthetic (a) vs real sections, zero-shot (b).</figcaption></figure>
+  <figure><a class="lb" href="assets/fs/fig4_from_scratch_control.jpg" data-cap="From-scratch U-Net vs LoRA and full fine-tuning at 10 and 200 training volumes"><img src="assets/fs/fig4_from_scratch_control.jpg" alt="U-Net vs DINOv3 at N=10 and N=200"></a><figcaption>From-scratch U-Net (orange) vs LoRA (blue) and full fine-tune (green) at 10 and 200 training volumes.</figcaption></figure>
+  <figure><a class="lb" href="assets/fs/fig5_synthetic_predictions.jpg" data-cap="Same validation slices under each model — orange hit, blue missed, red false positive"><img src="assets/fs/fig5_synthetic_predictions.jpg" alt="Predictions of U-Net and DINOv3 models on the same slices"></a><figcaption>What the models draw on the same slices: at 10 volumes the U-Net fragments where LoRA-DINOv3 already draws continuous faults.</figcaption></figure>
+</div>
+<div class="kv">
+  <a href="https://github.com/ducanhle156/seismic-fault-segmentation">GitHub · figures, tables, checkpoints, inference script ↗</a>
+  <a href="https://github.com/ducanhle156/seismic-fault-segmentation/releases">Released checkpoints ↗</a>
+</div>
 </section>
 
 <p class="back"><a href="index.html">← back to home</a></p>
 </main>
-<footer>Anh Le · North Dakota State University · Solar data: MAGFiLO v1.0 (Ahmadzadeh et al., 2024), NSO GONG (CC BY 4.0)</footer>
+<footer>Anh Le · North Dakota State University · Solar data: MAGFiLO v1.0 (Ahmadzadeh et al., 2024), NSO GONG (CC BY 4.0) · Seismic data: FaultSeg3D (Wu et al., 2019), CRACKS (Prabhushankar et al., 2024, CC BY 4.0)</footer>
 <div id="lightbox" hidden><img alt=""><div class="cap"></div></div>
 <script>
 (function(){var lb=document.getElementById('lightbox'),img=lb.querySelector('img'),cap=lb.querySelector('.cap');
