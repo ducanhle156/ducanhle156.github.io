@@ -40,11 +40,11 @@
 <h2>Solar filament segmentation</h2>
 <span class="status">Benchmark · results online · 2026</span>
 <p><b>Why:</b> it started as a hackathon entry. Working to a fixed problem and a hard deadline forced a design where every arm changes exactly one thing &mdash; and that discipline is what turned a competition entry into a benchmark worth keeping.</p>
-<p>Can a vision foundation model pretrained on everyday photographs segment thin, faint filaments on the Sun better than a CNN trained from scratch — and how much of the encoder has to change? A controlled benchmark on 958 GONG H-alpha full-disk images (MAGFiLO annotations): every arm changes exactly one thing, 5 folds × 3 seeds, scored on pixel, skeleton and object-level metrics.</p>
+<p>Can a vision foundation model pretrained on everyday photographs segment thin, faint filaments on the Sun better than a CNN trained from scratch — and how much of the encoder has to change? A controlled benchmark on 958 GONG full-disk solar images (MAGFiLO annotations): every arm changes exactly one thing, 5 folds × 3 seeds, scored on pixel, skeleton and object-level metrics.</p>
 <p><b>Result:</b> a SAM 2 encoder with 0.43 % of its weights adapted (LoRA) reaches Dice 0.63 — above full fine-tuning of the same encoder (0.60) and a from-scratch U-Net (0.62). The decoder matters more than the backbone; full fine-tuning overfits on ~650 training images.</p>
 <p class="figlab">Data</p>
 <div class="figs figs2">
-  <figure><a class="lb" href="assets/proj_filament.jpg" data-cap="GONG H-alpha full disk (left) and the SAM 2 + LoRA prediction with the ground-truth outline (right)"><img src="assets/proj_filament.jpg?v=4" alt="GONG H-alpha full disk and SAM 2 + LoRA filament prediction with ground-truth outline"></a><figcaption>A GONG H-alpha full disk (left) and the SAM 2 + LoRA prediction on it (right) with the MAGFiLO ground-truth outline.</figcaption></figure>
+  <figure><a class="lb" href="assets/proj_filament.jpg" data-cap="GONG full-disk solar image (left) and the SAM 2 + LoRA prediction with the ground-truth outline (right)"><img src="assets/proj_filament.jpg?v=4" alt="GONG full-disk solar image and SAM 2 + LoRA filament prediction with ground-truth outline"></a><figcaption>A GONG full-disk solar image (left) and the SAM 2 + LoRA prediction on it (right) with the MAGFiLO ground-truth outline.</figcaption></figure>
 </div>
 <p class="figlab">Results</p>
 <div class="figs">
@@ -59,14 +59,14 @@
 </section>
 
 <section class="proj" id="dapt">
-<h2>Self-supervised pretraining on unlabeled H-alpha</h2>
+<h2>Pretraining SAM 2 on 100,000 unlabeled solar images</h2>
 <span class="status">In progress · 2026</span>
 <p><b>Why:</b> the LoRA result above leaves one question open. With only ~650 labelled disks, is the encoder held back by <i>how</i> it was adapted, or by <i>what</i> it was pretrained on? A 106,871-frame unlabelled archive of the same instrument is the cleanest way to find out.</p>
-<p>A masked-image-modelling stage (SimMIM-style) on the SAM 2 Hiera encoder over 106,871 unlabeled GONG H-alpha frames, run before the LoRA fine-tune above and evaluated on the same 5 folds — so the delta isolates the pretraining. Includes the corpus selection, quality gate and CPU preprocessing pipeline for the unlabeled archive.</p>
+<p>A masked-image-modelling stage (SimMIM-style) on the SAM 2 Hiera encoder over 106,871 unlabeled GONG solar images, run before the LoRA fine-tune above and evaluated on the same 5 folds — so the delta isolates the pretraining. Includes the corpus selection, quality gate and CPU preprocessing pipeline for the unlabeled archive.</p>
 <p><b>Preliminary (runs still in progress):</b> after a single pretraining epoch the frozen encoder is a better feature extractor (linear-probe clDice 0.433 → 0.464, biased masking; unbiased masking barely moves it), yet once the encoder is LoRA-adapted on the labelled folds that head start disappears — the domain-pretrained trunk trails the shipped SAM 2 trunk by 1–2 clDice on every fold. The open question is whether the benefit reappears when labels are scarce, or whether masked reconstruction is eroding segmentation-friendly features; a low-label sweep and a zero-shot check are queued.</p>
 <p class="figlab">Data</p>
 <div class="figs figs2">
-  <figure><a class="lb" href="assets/dapt/fig_dapt_1_corpus.png" data-cap="2.2 M on-disk 512 px tiles from 104,648 quality-checked GONG H-alpha frames, 2010–2026, nine stations"><img src="assets/dapt/fig_dapt_1_corpus.png" alt="Usable tiles per year of observation, 2010 to 2026"></a><figcaption>The unlabelled corpus: 2.2 M on-disk 512 px tiles from 104,648 quality-checked GONG frames spanning 2010–2026.</figcaption></figure>
+  <figure><a class="lb" href="assets/dapt/fig_dapt_1_corpus.png" data-cap="2.2 M on-disk 512 px tiles from 104,648 quality-checked GONG solar images, 2010–2026, nine stations"><img src="assets/dapt/fig_dapt_1_corpus.png" alt="Usable tiles per year of observation, 2010 to 2026"></a><figcaption>The unlabelled corpus: 2.2 M on-disk 512 px tiles from 104,648 quality-checked GONG frames spanning 2010–2026.</figcaption></figure>
   <figure><a class="lb" href="assets/dapt/fig_dapt_2_pretext.png" data-cap="Epoch-mean masked-reconstruction loss for biased and unbiased masking"><img src="assets/dapt/fig_dapt_2_pretext.png" alt="Masked-reconstruction loss versus DAPT epochs completed"></a><figcaption>The reconstruction loss saturates after a single epoch (0.72 → 0.52, then ≤ 0.01 per epoch); masking strategy makes no difference to the pretext task.</figcaption></figure>
 </div>
 <p class="figlab">Results</p>
