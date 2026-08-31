@@ -24,7 +24,7 @@
 .kv{display:flex;gap:.8rem;flex-wrap:wrap;margin:.5rem 0 1rem;max-width:var(--col)}
 .kv a{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--ink);color:var(--ink);padding:.55rem .9rem}
 .kv a:hover{background:var(--rust);border-color:var(--rust);color:var(--paper);text-decoration:none}
-.demorow{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:1.4rem;align-items:center;max-width:1000px;margin:1rem 0 1.2rem}
+.demorow{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:1.4rem;align-items:center;max-width:var(--col);margin:1rem 0 1.2rem}
 .demorow figure{background:#fff}
 .demorow video{width:100%;display:block;background:#000}
 @media (max-width:860px){.demorow{grid-template-columns:1fr}.demorow .vid{max-width:330px}}
@@ -115,12 +115,12 @@
 <p>Measuring how fast a river flows without putting an instrument in the water. A drone hovers over a reach and films the surface; natural tracers (leaves, foam, debris) are segmented and tracked frame to frame — each tracer gets a temporal mask, a bounding box, an ID and a velocity — and the resulting paths are converted from pixels to metres per second through the georeferenced orthomosaic. The output is a sparse surface-velocity field along the tracer trajectories.</p>
 <p><b>Why it matters:</b> the surface velocities feed a downstream pipeline (power-law / entropy conversion to depth-averaged velocity, then a physics-informed neural network) that inverts channel bathymetry from video alone, cross-checked against ADCP and ADV field measurements and a PIVlab particle-image-velocimetry run on the same footage.</p>
 <p class="figlab">Data</p>
-<div class="figs figs2">
+<div class="figs figs1">
   <figure><a class="lb" href="assets/uav/fig0_orthomosaic.jpg" data-cap="Top-down drone orthomosaic of the surveyed reach"><img src="assets/uav/fig0_orthomosaic.jpg" alt="Top-down drone orthomosaic of a river reach"></a><figcaption>Top-down drone orthomosaic of the surveyed reach — the georeference that turns pixel tracks into metres.</figcaption></figure>
   <figure><a class="lb" href="assets/uav/fig1_tracking_annot.jpg" data-cap="What the tracker outputs per tracer: temporal mask, bounding box, ID and velocity, in a frame-anchored coordinate system"><img src="assets/uav/fig1_tracking_annot.jpg" alt="Annotated frame showing a tracer's temporal mask, bounding box, ID, velocity and the coordinate origin"></a><figcaption>What the tracker outputs per tracer: a temporal mask and bounding box, an ID with velocity, and the path it leaves — all in a frame-anchored coordinate system.</figcaption></figure>
 </div>
 <p class="figlab">Results</p>
-<div class="figs">
+<div class="figs figs1">
   <figure><a class="lb" href="assets/uav/fig2_particle_tracking.jpg" data-cap="Tracked leaves with per-tracer surface velocity (cm/s) over a single frame"><img src="assets/uav/fig2_particle_tracking.jpg" alt="Drone frame with tracked leaf trajectories and per-tracer velocities in cm/s"></a><figcaption>Tracked leaves and their trajectories over one frame, each labelled with its surface velocity in cm/s.</figcaption></figure>
   <figure><a class="lb" href="assets/uav/fig3_pivlab.jpg" data-cap="PIVlab particle-image velocimetry on the same footage: vector field (green) and streamlines (yellow)"><img src="assets/uav/fig3_pivlab.jpg" alt="PIVlab vector field and streamlines on the same footage"></a><figcaption>Cross-check: PIVlab particle-image velocimetry on the same footage — vector field (green) and streamlines (yellow).</figcaption></figure>
   <figure><a class="lb" href="assets/uav/fig4_framework.jpg" data-cap="Project framework: field measurements → velocity evaluation → PINN → bathymetry inversion with uncertainty quantification"><img src="assets/uav/fig4_framework.jpg" alt="Framework diagram: field measurements, velocity evaluation, physics-informed neural network, flow dynamics"></a><figcaption>Where the tracking sits: field measurements → velocity evaluation → PINN → bathymetry inversion with uncertainty quantification.</figcaption></figure>
@@ -139,7 +139,7 @@
   <figure class="vid"><video controls preload="metadata" playsinline poster="assets/ye/demo-poster.jpg" src="assets/ye/demo.mp4"></video><figcaption class="playcta"><span class="go"><i>&#9654;</i> Play the demo</span><span class="sub">2:29 &middot; with sound &middot; walking the route on the left</span></figcaption></figure>
 </div>
 <p class="figlab">How it works</p>
-<div class="figs figs2">
+<div class="figs figs1">
   <figure><a class="lb" href="assets/ye/anchor-graph.jpg" data-cap="The third floor as a graph: anchor nodes (purple) where reference photographs were taken, joined by the walkable edges between them"><img src="assets/ye/anchor-graph.jpg" alt="Third-floor building plan overlaid with anchor nodes and the walkable edges connecting them"></a><figcaption>The floor as a graph: anchor nodes where reference photographs were taken, joined by the walkable edges between them.</figcaption></figure>
   <figure><a class="lb" href="assets/ye/system-design.jpg" data-cap="The phone talks to a FastAPI service backed by PostgreSQL for embeddings and MinIO for the reference images"><img src="assets/ye/system-design.jpg" alt="Architecture diagram: a Swift iPhone app talking to FastAPI, PostgreSQL and MinIO running in Docker"></a><figcaption>The Swift app talks to a FastAPI service backed by PostgreSQL for the embeddings and MinIO for the reference images.</figcaption></figure>
 </div>
