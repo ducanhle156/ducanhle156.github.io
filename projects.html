@@ -81,7 +81,7 @@
 </div>
 
 <h3 id="dapt">Pretraining the encoder on 100,000 unlabelled disks</h3>
-<p>With only ~650 labelled disks, is the encoder held back by <i>how</i> it was adapted, or by <i>what</i> it was pretrained on? A masked-image-modelling stage on the SAM&nbsp;2 encoder over the unlabelled archive of the same instrument, run before the same LoRA fine-tune and scored on the same folds, isolates the answer.</p>
+<p>With only ~650 labelled disks, is the encoder held back by <i>how</i> it was adapted, or by <i>what</i> it was pretrained on? Self-supervised domain-adaptive pretraining of the SAM&nbsp;2 encoder over 100,000 unlabelled disks of the same instrument, followed by the identical LoRA fine-tune on the same folds, measures the effect directly.</p>
 <div class="figs figs1">
   <figure><a class="lb" href="assets/sf/f8_data_scale.png" data-cap="The unlabelled corpus by year of observation"><img src="assets/sf/f8_data_scale.png" alt="Usable pretraining tiles per year of observation, 2010 to 2026"></a><figcaption>The pretraining corpus: <b>2.2&nbsp;M</b> usable 512-px tiles from <b>104,648</b> H&alpha; frames spanning 2010&ndash;2026, <b>109&times;</b> the labelled set. Frames sharing an observation date with a labelled disk were excluded before selection, so no test image can leak into pretraining.</figcaption></figure>
 </div>
@@ -89,7 +89,7 @@
   <figure><a class="lb" href="assets/sf/f6_dapt_pipeline.jpg" data-cap="The pretext task on real data"><img src="assets/sf/f6_dapt_pipeline.jpg" alt="Pretext task: a tiled unlabelled disk, one tile, and the tile with 60 percent of its units hidden"></a><figcaption>The pretext task. Each tile has <b>60&nbsp;% of its 32&times;32 units hidden</b>, weighted toward darker units so filaments are hidden more often than quiet Sun; the encoder is asked to reconstruct only what was hidden. The adapted encoder then replaces the shipped checkpoint in the LoRA fine-tune.</figcaption></figure>
 </div>
 <div class="figs figs1">
-  <figure><a class="lb" href="assets/sf/f7_dapt_effect.png" data-cap="Domain-adaptive pretraining versus the shipped checkpoint"><img src="assets/sf/f7_dapt_effect.png" alt="Dice, clDice and PQ with and without domain-adaptive pretraining"></a><figcaption><b>Preliminary, runs in progress.</b> The same fine-tune from the shipped checkpoint and from the domain-pretrained one. On an early checkpoint the adapted encoder trails on all three metrics. The frozen encoder does become a better feature extractor after pretraining &mdash; that head start simply has not survived fine-tuning yet. Seed 0, 5 folds; error bars span the folds.</figcaption></figure>
+  <figure><a class="lb" href="assets/sf/f7_dapt_effect.png" data-cap="Domain-adaptive pretraining versus the shipped checkpoint"><img src="assets/sf/f7_dapt_effect.png" alt="Dice, clDice and PQ with and without domain-adaptive pretraining"></a><figcaption>The same LoRA fine-tune run twice, differing only in the encoder checkpoint it starts from: the shipped SAM&nbsp;2 weights, or the same encoder after masked pretraining on the unlabelled corpus. Scored on the same folds &mdash; <b>Dice 0.61 against 0.63</b>, with the pretrained encoder behind on all three metrics. Seed 0, 5 folds; error bars span the folds.</figcaption></figure>
 </div>
 
 <div class="kv">
