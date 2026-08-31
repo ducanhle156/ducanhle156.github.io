@@ -12,7 +12,14 @@
 .proj p b{color:var(--ink);font-weight:500}
 .figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:1.2rem;margin:1rem 0 1.2rem}
 .figs figure{background:#fff}.figs2{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
-.figlab{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-soft);opacity:.7;margin:1.2rem 0 -.4rem}.figs img{aspect-ratio:4/3;object-fit:contain;background:#fff}
+.figlab{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-soft);opacity:.7;margin:1.2rem 0 -.4rem}
+.figs img{width:100%;height:auto;display:block;background:#fcfcfb}
+.figs1{grid-template-columns:1fr;max-width:1000px}
+.figsq{grid-template-columns:1fr;max-width:820px}
+.proj h3{font-size:1.35rem;font-weight:500;margin:2.4rem 0 .2rem;scroll-margin-top:90px}
+.defs{max-width:52rem;margin:.4rem 0 1.2rem;padding-left:0;list-style:none}
+.defs li{color:var(--ink-soft);font-weight:300;line-height:1.6;margin:.35rem 0}
+.defs b{color:var(--ink);font-weight:600}
 .kv{display:flex;gap:.8rem;flex-wrap:wrap;margin:.5rem 0 1rem}
 .kv a{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--ink);color:var(--ink);padding:.55rem .9rem}
 .kv a:hover{background:var(--rust);border-color:var(--rust);color:var(--paper);text-decoration:none}
@@ -38,44 +45,57 @@
 
 <section class="proj" id="solar-filament">
 <h2>Solar filament segmentation</h2>
-<span class="status">Benchmark · results online · 2026</span>
-<p><b>Why:</b> it started as a hackathon entry. Working to a fixed problem and a hard deadline forced a design where every arm changes exactly one thing &mdash; and that discipline is what turned a competition entry into a benchmark worth keeping.</p>
-<p>Can a vision foundation model pretrained on everyday photographs segment thin, faint filaments on the Sun better than a CNN trained from scratch — and how much of the encoder has to change? A controlled benchmark on 958 GONG full-disk solar images (MAGFiLO annotations): every arm changes exactly one thing, 5 folds × 3 seeds, scored on pixel, skeleton and object-level metrics.</p>
-<p><b>Result:</b> a SAM 2 encoder with 0.43 % of its weights adapted (LoRA) reaches Dice 0.63 — above full fine-tuning of the same encoder (0.60) and a from-scratch U-Net (0.62). The decoder matters more than the backbone; full fine-tuning overfits on ~650 training images.</p>
-<p class="figlab">Data</p>
-<div class="figs figs2">
-  <figure><a class="lb" href="assets/proj_filament.jpg" data-cap="GONG full-disk solar image (left) and the SAM 2 + LoRA prediction with the ground-truth outline (right)"><img src="assets/proj_filament.jpg?v=4" alt="GONG full-disk solar image and SAM 2 + LoRA filament prediction with ground-truth outline"></a><figcaption>A GONG full-disk solar image (left) and the SAM 2 + LoRA prediction on it (right) with the MAGFiLO ground-truth outline.</figcaption></figure>
-</div>
-<p class="figlab">Results</p>
-<div class="figs">
-  <figure><a class="lb" href="assets/sf/fig3_all_arms_comparison.jpg" data-cap="Nine arms on the same split"><img src="assets/sf/fig3_all_arms_comparison.jpg" alt="All arms comparison"></a><figcaption>Nine arms on the same split — blue from scratch, orange DINOv3, green SAM 2.</figcaption></figure>
-  <figure><a class="lb" href="assets/sf/fig4_lora_vs_full_finetune.jpg" data-cap="LoRA vs full fine-tune"><img src="assets/sf/fig4_lora_vs_full_finetune.jpg" alt="LoRA vs full fine-tune"></a><figcaption>Same encoder, decoder and data; only the number of trainable encoder weights changes.</figcaption></figure>
-  <figure><a class="lb" href="assets/sf/fig7_same_disks_all_arms.jpg" data-cap="Same test disks, four arms"><img src="assets/sf/fig7_same_disks_all_arms.jpg" alt="Same disks, four arms"></a><figcaption>What the models draw: same test disks, four arms (orange hit, blue missed, red false positive).</figcaption></figure>
-</div>
-<div class="kv">
-  <a href="https://ducanhle156.github.io/solar-filament-segmentation/">Full results gallery ↗</a>
-  <a href="https://github.com/ducanhle156/solar-filament-segmentation">GitHub · figures, tables, inference script ↗</a>
-</div>
-</section>
+<span class="status">Benchmark &middot; results online &middot; 2026</span>
+<p><b>Why:</b> it started as a hackathon entry. The deadline forced a design where every arm changes exactly one thing &mdash; and that discipline is what turned a competition entry into a benchmark worth keeping.</p>
+<p>Can a vision foundation model pretrained on everyday photographs segment thin, faint filaments on the Sun better than a CNN trained from scratch &mdash; and how much of the encoder has to change? Six architectures on 958 GONG full-disk images (MAGFiLO annotations), 5 folds &times; 3 seeds, one factor changed per arm. A second stage then pretrains the winning encoder on 100,000 unlabelled disks of the same instrument.</p>
+<p><b>Result:</b> pretraining bought <b>efficiency, not accuracy</b>. A SAM&nbsp;2 encoder with 0.43&nbsp;% of its weights adapted by LoRA matches the best from-scratch model while training <b>7&times; fewer</b> weights, and beats full fine-tuning of the same encoder by 0.03 Dice.</p>
 
-<section class="proj" id="dapt">
-<h2>Pretraining SAM 2 on 100,000 unlabeled solar images</h2>
-<span class="status">In progress · 2026</span>
-<p><b>Why:</b> the LoRA result above leaves one question open. With only ~650 labelled disks, is the encoder held back by <i>how</i> it was adapted, or by <i>what</i> it was pretrained on? A 106,871-frame unlabelled archive of the same instrument is the cleanest way to find out.</p>
-<p>A masked-image-modelling stage (SimMIM-style) on the SAM 2 Hiera encoder over 106,871 unlabeled GONG solar images, run before the LoRA fine-tune above and evaluated on the same 5 folds — so the delta isolates the pretraining. Includes the corpus selection, quality gate and CPU preprocessing pipeline for the unlabeled archive.</p>
-<p><b>Preliminary (runs still in progress):</b> after a single pretraining epoch the frozen encoder is a better feature extractor (linear-probe clDice 0.433 → 0.464, biased masking; unbiased masking barely moves it), yet once the encoder is LoRA-adapted on the labelled folds that head start disappears — the domain-pretrained trunk trails the shipped SAM 2 trunk by 1–2 clDice on every fold. The open question is whether the benefit reappears when labels are scarce, or whether masked reconstruction is eroding segmentation-friendly features; a low-label sweep and a zero-shot check are queued.</p>
-<p class="figlab">Data</p>
-<div class="figs figs2">
-  <figure><a class="lb" href="assets/dapt/fig_dapt_1_corpus.png" data-cap="2.2 M on-disk 512 px tiles from 104,648 quality-checked GONG solar images, 2010–2026, nine stations"><img src="assets/dapt/fig_dapt_1_corpus.png" alt="Usable tiles per year of observation, 2010 to 2026"></a><figcaption>The unlabelled corpus: 2.2 M on-disk 512 px tiles from 104,648 quality-checked GONG frames spanning 2010–2026.</figcaption></figure>
-  <figure><a class="lb" href="assets/dapt/fig_dapt_2_pretext.png" data-cap="Epoch-mean masked-reconstruction loss for biased and unbiased masking"><img src="assets/dapt/fig_dapt_2_pretext.png" alt="Masked-reconstruction loss versus DAPT epochs completed"></a><figcaption>The reconstruction loss saturates after a single epoch (0.72 → 0.52, then ≤ 0.01 per epoch); masking strategy makes no difference to the pretext task.</figcaption></figure>
+<p class="figlab">How predictions are scored</p>
+<ul class="defs">
+  <li><b>Dice</b> &mdash; overlap between predicted and annotated filament pixels. 1.0 is perfect; background is excluded, so it does not flatter a model that predicts nothing.</li>
+  <li><b>clDice</b> &mdash; the same overlap measured on the <i>skeletons</i>. A filament broken into pieces is penalised even when almost every pixel is right.</li>
+  <li><b>PQ</b> &mdash; panoptic quality: filaments counted as objects, where a prediction matches an annotation only if the two overlap by more than half.</li>
+</ul>
+
+<p class="figlab">The task</p>
+<div class="figs figs1">
+  <figure><a class="lb" href="assets/filament_segmentation.png" data-cap="A GONG H-alpha full disk (left) and the SAM 2 + LoRA prediction with the MAGFiLO ground-truth outline (right)"><img src="assets/filament_segmentation.png" alt="GONG H-alpha full disk and the SAM 2 + LoRA filament prediction outlined against the annotation"></a><figcaption>A GONG H&alpha; full disk, and what the adapted model draws on it. Orange is the prediction, green the MAGFiLO annotation outline &mdash; the two agree along the spine of each filament and disagree at the ends, which is where thin-structure metrics are decided.</figcaption></figure>
 </div>
-<p class="figlab">Results</p>
-<div class="figs">
-  <figure><a class="lb" href="assets/dapt/fig_dapt_3_probe.png" data-cap="Frozen-trunk linear probe on fold 0: clDice versus DAPT epochs applied to the trunk"><img src="assets/dapt/fig_dapt_3_probe.png" alt="Linear-probe clDice versus DAPT epochs for biased and unbiased masking, with the shipped SAM 2 trunk as a dashed baseline"></a><figcaption>One DAPT epoch improves the frozen features by +3 clDice (0.433 → 0.464) — and only biased masking does it.</figcaption></figure>
-  <figure><a class="lb" href="assets/dapt/fig_dapt_4_headfit.png" data-cap="Linear-head training curves on fold 0 for the shipped trunk and the two DAPT trunks"><img src="assets/dapt/fig_dapt_4_headfit.png" alt="Probe training curves: DAPT trunks start near 0.4 clDice, the shipped trunk starts near zero and needs five epochs"></a><figcaption>DAPT features are linearly usable at once; the shipped trunk needs five epochs of head training to become so.</figcaption></figure>
-  <figure><a class="lb" href="assets/dapt/fig_dapt_5_transfer.png" data-cap="LoRA fine-tuning from the shipped trunk versus the DAPT trunk: (a) mean and range across folds, (b) per-fold clDice at the last epoch both have reached"><img src="assets/dapt/fig_dapt_5_transfer.png" alt="Validation clDice during LoRA fine-tuning: shipped trunk versus DAPT trunk, mean over folds and per fold"></a><figcaption>Under LoRA fine-tuning the DAPT advantage disappears: the domain-pretrained trunk trails the shipped trunk by 1–2 clDice on every fold (a: mean ± range over folds; b: per fold at matched epoch).</figcaption></figure>
+<div class="figs figs1">
+  <figure><a class="lb" href="assets/sf/f1_task.jpg" data-cap="One labelled disk and one 512-px training tile at full resolution"><img src="assets/sf/f1_task.jpg" alt="A labelled solar disk beside one 512-pixel training tile at full resolution"></a><figcaption>Why this is hard. Filaments occupy <b>0.65&nbsp;% of the disk</b>, run about <b>11&nbsp;px wide</b> at 2048&nbsp;px, and there are about <b>7 per disk</b>. The right panel is one 512-px training tile at full resolution &mdash; at disk scale a filament is a hairline.</figcaption></figure>
 </div>
-<div class="kv"><a href="https://github.com/ducanhle156/solar-filament-segmentation#8-in-progress--self-supervised-pretraining-on-100k-unlabeled-disks">Status in the repo ↗</a></div>
+
+<p class="figlab">Which architecture</p>
+<div class="figs figs1">
+  <figure><a class="lb" href="assets/sf/f2_efficiency.png" data-cap="Six segmentation architectures: Dice and trained parameters"><img src="assets/sf/f2_efficiency.png" alt="Six architectures compared by Dice and by trained parameter count"></a><figcaption>Six architectures, each in its best configuration. <b>(a)</b> Dice &mdash; the top four sit within 0.014 of each other. <b>(b)</b> Trained parameters. SAM&nbsp;2 with LoRA reaches the highest Dice on 5.4&nbsp;M trained weights against 37&nbsp;M for the best from-scratch model: the foundation model buys efficiency, not accuracy. 5 folds &times; 3 seeds; error bars are the spread across seeds.</figcaption></figure>
+</div>
+<div class="figs figs1">
+  <figure><a class="lb" href="assets/sf/f3_sam2_adaptation.png" data-cap="SAM 2: low-rank adaptation versus full fine-tuning"><img src="assets/sf/f3_sam2_adaptation.png" alt="LoRA versus full fine-tuning of the same SAM 2 encoder on Dice, clDice and PQ"></a><figcaption>The same encoder, decoder, folds and schedule &mdash; only the adaptation differs. Low-rank adaptation trains <b>5.4&nbsp;M weights against 73.8&nbsp;M</b> and is ahead on pixel overlap (Dice 0.627 vs 0.596) and on topology (clDice 0.717 vs 0.698). At object level the two are tied. Full fine-tuning overfits ~650 training images.</figcaption></figure>
+</div>
+
+<p class="figlab">What the models draw</p>
+<div class="figs figsq">
+  <figure><a class="lb" href="assets/sf/f5a_best.jpg" data-cap="Best of the eight gallery disks"><img src="assets/sf/f5a_best.jpg" alt="Best-case disk: ground truth and three model predictions"></a><figcaption>Best case. Yellow found, blue missed, red false positive; violet is the annotation. SAM&nbsp;2&nbsp;+&nbsp;LoRA recovers the full limb filament that U-Net leaves partly unmarked (Dice 0.774 / <b>0.849</b> / 0.846).</figcaption></figure>
+  <figure><a class="lb" href="assets/sf/f5b_typical.jpg" data-cap="Median disk by SAM 2 + LoRA Dice"><img src="assets/sf/f5b_typical.jpg" alt="Typical disk: ground truth and three model predictions"></a><figcaption>Typical case &mdash; a busy disk with a dozen filaments. The models agree on the long central features and differ on the short northern ones. Here <b>U-Net scores highest</b> (0.742 / 0.733 / 0.713): per-disk ordering is not the aggregate ordering.</figcaption></figure>
+  <figure><a class="lb" href="assets/sf/f5c_worst.jpg" data-cap="Worst disk of the eight"><img src="assets/sf/f5c_worst.jpg" alt="Worst-case disk: ground truth and three model predictions"></a><figcaption>Worst case &mdash; quiet Sun with two short filaments, so a single feature moves the score by a tenth (0.375 / 0.291 / 0.266). This is why the comparison is made over 958 disks and not by eye.</figcaption></figure>
+</div>
+
+<h3 id="dapt">Pretraining the encoder on 100,000 unlabelled disks</h3>
+<p>With only ~650 labelled disks, is the encoder held back by <i>how</i> it was adapted, or by <i>what</i> it was pretrained on? A masked-image-modelling stage on the SAM&nbsp;2 encoder over the unlabelled archive of the same instrument, run before the same LoRA fine-tune and scored on the same folds, isolates the answer.</p>
+<div class="figs figs1">
+  <figure><a class="lb" href="assets/sf/f8_data_scale.png" data-cap="The unlabelled corpus by year of observation"><img src="assets/sf/f8_data_scale.png" alt="Usable pretraining tiles per year of observation, 2010 to 2026"></a><figcaption>The pretraining corpus: <b>2.2&nbsp;M</b> usable 512-px tiles from <b>104,648</b> H&alpha; frames spanning 2010&ndash;2026, <b>109&times;</b> the labelled set. Frames sharing an observation date with a labelled disk were excluded before selection, so no test image can leak into pretraining.</figcaption></figure>
+</div>
+<div class="figs figs1">
+  <figure><a class="lb" href="assets/sf/f6_dapt_pipeline.jpg" data-cap="The pretext task on real data"><img src="assets/sf/f6_dapt_pipeline.jpg" alt="Pretext task: a tiled unlabelled disk, one tile, and the tile with 60 percent of its units hidden"></a><figcaption>The pretext task. Each tile has <b>60&nbsp;% of its 32&times;32 units hidden</b>, weighted toward darker units so filaments are hidden more often than quiet Sun; the encoder is asked to reconstruct only what was hidden. The adapted encoder then replaces the shipped checkpoint in the LoRA fine-tune.</figcaption></figure>
+</div>
+<div class="figs figs1">
+  <figure><a class="lb" href="assets/sf/f7_dapt_effect.png" data-cap="Domain-adaptive pretraining versus the shipped checkpoint"><img src="assets/sf/f7_dapt_effect.png" alt="Dice, clDice and PQ with and without domain-adaptive pretraining"></a><figcaption><b>Preliminary, runs in progress.</b> The same fine-tune from the shipped checkpoint and from the domain-pretrained one. On an early checkpoint the adapted encoder trails on all three metrics. The frozen encoder does become a better feature extractor after pretraining &mdash; that head start simply has not survived fine-tuning yet. Seed 0, 5 folds; error bars span the folds.</figcaption></figure>
+</div>
+
+<div class="kv">
+  <a href="https://ducanhle156.github.io/solar-filament-segmentation/">Full results gallery &#8599;</a>
+  <a href="https://github.com/ducanhle156/solar-filament-segmentation">GitHub &middot; figures, tables, inference script &#8599;</a>
+</div>
 </section>
 
 <section class="proj" id="fault">

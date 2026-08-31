@@ -70,23 +70,13 @@
   <p class="lede">Ongoing projects — click a card for key figures and links.</p>
   <div class="rcards">
     <a class="rcard" href="projects.html#solar-filament">
-      <img class="tall" src="assets/proj_filament.jpg?v=4" alt="GONG full-disk solar image (left) and SAM 2 + LoRA filament prediction with ground-truth outline (right)">
+      <img src="assets/proj_filament_card.jpg?v=1" alt="Full-disk solar image with the SAM 2 + LoRA filament prediction overlaid">
       <div class="cb">
-        <span class="status">Benchmark · results online</span>
+        <span class="status">Benchmark &middot; results online</span>
         <h3>Solar filament segmentation</h3>
         <p class="why">A hackathon entry that became a controlled benchmark.</p>
-        <p>From-scratch baselines (U-Net, EdgeAttNet, ConvNeXt, YOLO) versus zero-shot, frozen, LoRA-adapted and fully fine-tuned DINOv3 / SAM 2 encoders on 958 GONG full-disk solar images (MAGFiLO). Every arm changes one thing; results reported on two rubrics with full-disk galleries.</p>
-        <div class="links"><span>Details →</span></div>
-      </div>
-    </a>
-    <a class="rcard" href="projects.html#dapt">
-      <img src="assets/proj_dapt.jpg?v=2" alt="Linear-probe clDice versus pretraining epochs: one epoch of pretraining lifts the frozen encoder from 0.433 to 0.464">
-      <div class="cb">
-        <span class="status">In progress</span>
-        <h3>Pretraining SAM 2 on 100,000 unlabeled solar images</h3>
-        <p class="why">Is the encoder held back by how it was adapted, or by what it was pretrained on?</p>
-        <p>Masked-image pretraining of the SAM 2 encoder on 100,000 unlabeled GONG solar images before fine-tuning. Early result: the pretrained encoder gives better frozen features (+3 clDice), but the gain does not survive LoRA fine-tuning.</p>
-        <div class="links"><span>Details →</span></div>
+        <p>Six architectures &mdash; U-Net, EdgeAttNet, ConvNeXt, YOLO11-seg, DINOv3, SAM&nbsp;2 &mdash; on 958 GONG full-disk images, one factor changed per arm, 5 folds &times; 3 seeds. Pretraining bought efficiency, not accuracy: LoRA on SAM&nbsp;2 matches the best from-scratch model on 7&times; fewer trained weights. A second stage pretrains that encoder on 100,000 unlabelled disks.</p>
+        <div class="links"><span>Details &rarr;</span></div>
       </div>
     </a>
     <a class="rcard" href="projects.html#fault">
