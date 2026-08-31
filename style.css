@@ -14,8 +14,8 @@ code{font-family:'JetBrains Mono',monospace;font-size:.82em;color:var(--teal)}
 .topnav .links{display:flex;gap:2rem;flex-wrap:wrap}
 .topnav .links a{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink);opacity:.65}
 .topnav .links a:hover,.topnav .links a.active{opacity:1;text-decoration:none;border-bottom:1px solid var(--rust)}
-main{max-width:58rem;margin:0 auto;padding:4rem 3rem}
-footer{max-width:58rem;margin:4rem auto 2rem;padding:1.5rem 3rem;border-top:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.08em;color:var(--ink-soft);opacity:.7}
+main{max-width:1400px;margin:0 auto;padding:4rem 3rem}
+footer{max-width:1400px;margin:4rem auto 2rem;padding:1.5rem 3rem;border-top:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.08em;color:var(--ink-soft);opacity:.7}
 footer .social a{margin-right:1.5rem;color:var(--ink)}
 /* type */
 h1{font-size:clamp(2.4rem,5vw,4.5rem);font-weight:300;line-height:1;letter-spacing:-.03em;margin-bottom:1.5rem;font-variation-settings:"opsz" 144}
