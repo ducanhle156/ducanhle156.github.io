@@ -118,3 +118,8 @@ section{padding:3rem 0}
 .contact span{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;opacity:.7}
 .contact b{font-weight:400;margin-top:.3rem;word-break:break-all}
 @media (max-width:900px){.hero{grid-template-columns:1fr;min-height:0;padding-top:2rem}.about-grid{grid-template-columns:1fr}.about-side{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:1.5rem}}
+
+/* justified body copy; hyphenation keeps the word spacing even */
+main p,figcaption,.chain li,.defs li{text-align:justify;text-justify:inter-word;hyphens:auto;-webkit-hyphens:auto;-ms-hyphens:auto}
+/* short label-like paragraphs read better ranged left */
+.why,.status,.metric,.back{text-align:left;hyphens:manual}
