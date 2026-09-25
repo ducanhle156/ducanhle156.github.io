@@ -6,9 +6,9 @@ web-image foundation model (DINOv3 ViT-B/16) on unlabelled sections of one publi
 Australia). Fault segmentation with 1 to 900 labelled sections is the downstream test, always against a 3-D U-Net trained
 from scratch, on one geographically separated split, with three to five seeds per cell. No method here is new; the
 contribution is the controlled comparison of pre-training recipes and what it says about when unlabelled seismic data
-earns its cost. Web page: **https://ducanhle156.github.io/seismic-pretraining/** (with the interactive 3-D cube).
+earns its cost. Web page: **https://ducanhle156.github.io/seismic-pretraining/**.
 
-The story in twelve pictures, in the order the work was done.
+The story in eleven pictures, in the order the work was done.
 
 ## 1. The data: a seismic section, and the faults an expert draws on it
 
@@ -116,16 +116,7 @@ alike. The U-Net improves up to 100 (0.27 → 0.34 → 0.38 → 0.40) and is fla
 pre-trained model at 3 somewhere between 10 and 100 labelled sections. Both plateaus start between 10 and 100; that
 interval itself was not sampled.
 
-## 11. In 3-D: fault surfaces from one to three labelled sections are continuous
-
-<p align="center"><img src="figures/3d_fault_surfaces.png" width="100%"></p>
-
-Same held-out sub-volume, same camera, probability 0.5: (a) expert, (b) 3-D U-Net with 3 labelled sections, (c) DINOv3 +
-seismic I-JEPA with 1, (d) with 3. Interactive: [`interactive/fault_cube.html`](interactive/fault_cube.html) (orbit the
-cube; switch between expert, U-Net and the pre-trained model with 1 or 3 labels). Where it fails: the worst test sections sit
-at the edge of the volume, where the 3-D decoder has one-sided context; with 900 labels most errors disappear.
-
-## 12. Five findings on one page
+## 11. Five findings on one page
 
 <p align="center"><img src="figures/key_findings.png" width="100%"></p>
 

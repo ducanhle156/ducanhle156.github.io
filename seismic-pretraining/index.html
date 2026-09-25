@@ -6,7 +6,7 @@
 <title>Self-supervised pre-training for seismic interpretation</title>
 <meta name="description" content="Which self-supervised recipe adapts a vision foundation model (DINOv3) to seismic data, and when does it pay off? Four recipes run in the open stable-pretraining library, tested on 3-D fault segmentation with 1 to 900 labelled sections against a 3-D U-Net.">
 <meta property="og:title" content="Self-supervised pre-training for seismic interpretation">
-<meta property="og:description" content="Which recipe adapts a vision foundation model to seismic data, and when it pays off. A controlled benchmark on public data, told in twelve pictures.">
+<meta property="og:description" content="Which recipe adapts a vision foundation model to seismic data, and when it pays off. A controlled benchmark on public data, told in eleven pictures.">
 <meta property="og:image" content="https://ducanhle156.github.io/seismic-pretraining/figures/key_findings.png">
 <meta property="og:type" content="website">
 <style>
@@ -53,7 +53,7 @@
     <span class="pill">DINOv3 → seismic</span><span class="pill">Test: 3-D fault segmentation, 1 – 900 labels</span><span class="pill">Public data, controlled benchmark</span>
   </div>
   <h1>Self-supervised pre-training for seismic interpretation: which recipe adapts a vision foundation model, and when it pays off</h1>
-  <p class="lede">Four self-supervised recipes (I-JEPA, VISReg, DINOv2, MAE), all run as forward functions of the open <a href="https://github.com/rbalestr-lab/stable-pretraining">stable-pretraining</a> library, continue the pre-training of a web-image foundation model (DINOv3 ViT-B/16) on unlabelled sections of one public 3-D seismic survey. Fault segmentation with 1 to 900 labelled sections is the downstream test, always against a 3-D U-Net trained from scratch, on one geographically separated split, with three to five seeds per cell. No method here is new; the contribution is the controlled comparison of pre-training recipes and what it says about when unlabelled seismic data earns its cost. The story below is told in twelve pictures, in the order the work was done.</p>
+  <p class="lede">Four self-supervised recipes (I-JEPA, VISReg, DINOv2, MAE), all run as forward functions of the open <a href="https://github.com/rbalestr-lab/stable-pretraining">stable-pretraining</a> library, continue the pre-training of a web-image foundation model (DINOv3 ViT-B/16) on unlabelled sections of one public 3-D seismic survey. Fault segmentation with 1 to 900 labelled sections is the downstream test, always against a 3-D U-Net trained from scratch, on one geographically separated split, with three to five seeds per cell. No method here is new; the contribution is the controlled comparison of pre-training recipes and what it says about when unlabelled seismic data earns its cost. The story below is told in eleven pictures, in the order the work was done.</p>
   <div class="kpis">
     <div class="kpi"><b>MAE: rank 178 → 17</b><span>pixel-reconstruction pre-training destroys DINOv3 features within a thousand steps; latent prediction (I-JEPA) keeps them</span></div>
     <div class="kpi"><b>+0.02 – 0.04 IoU</b><span>from seismic pre-training at 1 and 10 labelled sections, in every seed; within seed noise at 900</span></div>
@@ -142,18 +142,7 @@
 </section>
 
 <section id="s11">
-  <h2><span class="n">11</span>In 3-D: fault surfaces from one to three labelled sections are continuous</h2>
-  <figure><img src="figures/3d_fault_surfaces.png" alt="Fault surfaces in a test sub-volume: expert annotation, 3-D U-Net with 3 labels, pre-trained DINOv3 with 1 and with 3 labels">
-  <figcaption>The same held-out sub-volume, same camera, probability 0.5: (a) expert, (b) 3-D U-Net with 3 labelled sections, (c) DINOv3 + seismic I-JEPA with 1, (d) with 3. Colour is position (crossline), not confidence.</figcaption></figure>
-  <figure>
-    <iframe class="frame" src="interactive/fault_cube.html" title="Interactive 3-D fault cube" loading="lazy"></iframe>
-    <figcaption>Interactive: drag to orbit, scroll to zoom; the buttons switch between the expert annotation, the 3-D U-Net (3 labels) and the pre-trained DINOv3 with 1 or 3 labels. <a href="interactive/fault_cube.html">Open full screen</a>.</figcaption>
-  </figure>
-  <div class="answer"><b>Where it fails.</b> The worst test sections sit at the edge of the volume, where the 3-D decoder has one-sided context, and the errors are over-predictions in low-amplitude intervals rather than missed faults. With 900 labels most of them disappear: a label-scarcity effect, not a limit of the encoder.</div>
-</section>
-
-<section id="s12">
-  <h2><span class="n">12</span>Five findings on one page</h2>
+  <h2><span class="n">11</span>Five findings on one page</h2>
   <figure><img src="figures/key_findings.png" alt="Five findings: 3-D regime, latent-prediction pre-training, label scarcity, effective-rank gate, corpus mixing"></figure>
 </section>
 
