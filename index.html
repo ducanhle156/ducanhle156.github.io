@@ -79,26 +79,16 @@
         <div class="links"><span>Details &rarr;</span></div>
       </div>
     </a>
-    <a class="rcard" href="projects.html#seismic-pretraining">
-      <img class="tall" src="assets/proj_seismic_pretraining.jpg" alt="Effective rank and fault-probe AUROC of four self-supervised recipes during seismic pre-training of DINOv3" width="1600" height="853">
+    <div class="rcard">
+      <a href="projects.html#seismic-pretraining"><img class="tall" src="assets/proj_seismic_pretraining.jpg" alt="Effective rank and fault-probe AUROC of four self-supervised recipes during seismic pre-training of DINOv3" width="1600" height="853"></a>
       <div class="cb">
-        <span class="status">Benchmark &middot; results online &middot; 2026</span>
-        <h3>Self-supervised pre-training for seismic interpretation</h3>
-        <p class="why">Which recipe adapts a vision foundation model to seismic data, and when does it pay off?</p>
-        <p>Four self-supervised recipes (I-JEPA, VISReg, DINOv2, MAE) run in the open stable-pretraining library to continue DINOv3 on unlabelled seismic sections, tested on 3-D fault segmentation with 1 to 900 labels against a 3-D U-Net. Latent prediction wins, pixel reconstruction breaks the encoder, and three labelled sections match a U-Net trained on 900.</p>
-        <div class="links"><span>Details &rarr;</span></div>
+        <span class="status">Two benchmarks &middot; results online</span>
+        <h3>Seismic fault segmentation and self-supervised pre-training</h3>
+        <p class="why">How much of a vision foundation model to adapt to seismic data, and which pre-training recipe pays off.</p>
+        <p>First, frozen, LayerNorm-only, LoRA and fully fine-tuned DINOv3 encoders against a from-scratch U-Net on synthetic and real fault sections. Then four self-supervised recipes (I-JEPA, VISReg, DINOv2, MAE), run in the open stable-pretraining library, tested on 3-D fault segmentation with 1 to 900 labels: latent prediction wins, and three labelled sections match a U-Net trained on 900.</p>
+        <div class="links"><a href="projects.html#fault">Fault study &rarr;</a><a href="seismic-pretraining/">Pre-training gallery &rarr;</a></div>
       </div>
-    </a>
-    <a class="rcard" href="projects.html#fault">
-      <img class="tall" src="assets/proj_fault.jpg?v=7" alt="Real CRACKS F3 seismic section with expert (blue) and practitioner-consensus (orange) fault labels">
-      <div class="cb">
-        <span class="status">Benchmark · results online</span>
-        <h3>Seismic fault segmentation</h3>
-        <p class="why">Does the filament recipe carry to a domain with different physics?</p>
-        <p>Frozen, LayerNorm-only, LoRA and fully fine-tuned DINOv3 encoders versus a from-scratch U-Net, trained on synthetic FaultSeg3D volumes and tested on real CRACKS field sections. More adaptation wins on synthetic data and loses on real data; the foundation model pays off when labels are scarce.</p>
-        <div class="links"><span>Details →</span></div>
-      </div>
-    </a>
+    </div>
     <a class="rcard" href="projects.html#uav-tracking">
       <img class="tall" src="assets/proj_uav.jpg" alt="Drone frame of a river with tracked leaf trajectories and per-tracer surface velocities">
       <div class="cb">
