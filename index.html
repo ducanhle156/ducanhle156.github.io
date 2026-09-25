@@ -79,13 +79,23 @@
         <div class="links"><span>Details &rarr;</span></div>
       </div>
     </a>
-    <a class="rcard" href="projects.html#seismic-pretraining">
+    <a class="rcard" href="projects.html#fault">
       <img class="tall" src="assets/proj_seismic.jpg" alt="Thebe seismic section with expert fault labels drawn in red">
       <div class="cb">
-        <span class="status">Two benchmarks &middot; results online</span>
+        <span class="status">Benchmark &middot; results online</span>
         <h3>Foundation models for seismic faults</h3>
-        <p class="why">Adapt a web-image model to seismic data: how much, and how?</p>
-        <p>Two controlled benchmarks on public surveys: how much of DINOv3 to adapt (frozen, LayerNorm, LoRA, full) against a from-scratch U-Net, then four self-supervised pre-training recipes run in the open stable-pretraining library and tested on 3-D fault segmentation. Three labelled sections match a U-Net trained on 900.</p>
+        <p class="why">Does the filament recipe carry to a domain with different physics?</p>
+        <p>Frozen, LayerNorm-only, LoRA and fully fine-tuned DINOv3 encoders versus a from-scratch U-Net, trained on synthetic FaultSeg3D volumes and tested on real CRACKS field sections. More adaptation wins on synthetic data and loses on real data; the foundation model pays off when labels are scarce.</p>
+        <div class="links"><span>Details &rarr;</span></div>
+      </div>
+    </a>
+    <a class="rcard" href="projects.html#seismic-pretraining">
+      <img class="tall" src="assets/proj_ssl.jpg" alt="Patch-feature similarity map of DINOv3 after seismic I-JEPA pre-training, lighting up along the expert faults">
+      <div class="cb">
+        <span class="status">Benchmark &middot; results online &middot; 2026</span>
+        <h3>Self-supervised seismic pre-training</h3>
+        <p class="why">Which recipe adapts a vision foundation model to seismic data, and when does it pay off?</p>
+        <p>Four self-supervised recipes (I-JEPA, VISReg, DINOv2, MAE), run in the open stable-pretraining library, continue DINOv3 on unlabelled seismic sections and are tested on 3-D fault segmentation with 1 to 900 labels. Latent prediction wins, and three labelled sections match a U-Net trained on 900.</p>
         <div class="links"><span>Details &rarr;</span></div>
       </div>
     </a>
