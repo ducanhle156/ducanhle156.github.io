@@ -1,0 +1,16 @@
+model,n_labelled_inlines,n_seeds,trainable_parameters,steps,gpu_hours_mean,gpu_hours_sd,gpu_class,test_iou_mean
+3-D U-Net (from scratch),1,3,3284257,60000,4.39,2.3,A40 / L40S / A100 / A10 (whichever was free),0.2045
+3-D U-Net (from scratch),3,3,3284257,60000,7.45,2.26,A40 / L40S / A100 / A10 (whichever was free),0.3396
+3-D U-Net (from scratch),10,3,3284257,60000,8.01,1.75,A40 / L40S / A100 / A10 (whichever was free),0.377
+3-D U-Net (from scratch),100,3,3284257,60000,6.42,0.83,A40 / L40S / A100 / A10 (whichever was free),0.3957
+3-D U-Net (from scratch),900,3,3284257,60000,7.52,2.32,A40 / L40S / A100 / A10 (whichever was free),0.3861
+DINOv3 + 3-D decoder,1,3,100849090,10000,1.47,0.0,H100 (N = 100: A100 40 GB),0.3246
+DINOv3 + 3-D decoder,3,5,100849090,10000,1.48,0.01,H100 (N = 100: A100 40 GB),0.3714
+DINOv3 + 3-D decoder,10,3,100849090,10000,1.48,0.01,H100 (N = 100: A100 40 GB),0.391
+DINOv3 + 3-D decoder,100,3,100849090,10000,2.71,0.01,H100 (N = 100: A100 40 GB),0.4034
+DINOv3 + 3-D decoder,900,3,100849090,10000,1.49,0.01,H100 (N = 100: A100 40 GB),0.4083
+DINOv3 + seismic I-JEPA + 3-D decoder,1,3,100849090,10000,1.48,0.01,H100 (N = 100: A100 40 GB / A40),0.3613
+DINOv3 + seismic I-JEPA + 3-D decoder,3,5,100849090,10000,1.48,0.01,H100 (N = 100: A100 40 GB / A40),0.3836
+DINOv3 + seismic I-JEPA + 3-D decoder,10,3,100849090,10000,1.48,0.01,H100 (N = 100: A100 40 GB / A40),0.4149
+DINOv3 + seismic I-JEPA + 3-D decoder,100,3,100849090,10000,3.4,1.17,H100 (N = 100: A100 40 GB / A40),0.413
+DINOv3 + seismic I-JEPA + 3-D decoder,900,3,100849090,10000,1.49,0.01,H100 (N = 100: A100 40 GB / A40),0.4143

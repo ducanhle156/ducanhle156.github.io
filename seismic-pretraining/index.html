@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Self-supervised pre-training for seismic interpretation</title>
+<meta name="description" content="Which self-supervised recipe adapts a vision foundation model (DINOv3) to seismic data, and when does it pay off? Four recipes run in the open stable-pretraining library, tested on 3-D fault segmentation with 1 to 900 labelled sections against a 3-D U-Net.">
+<meta property="og:title" content="Self-supervised pre-training for seismic interpretation">
+<meta property="og:description" content="Which recipe adapts a vision foundation model to seismic data, and when it pays off. A controlled benchmark on public data, told in twelve pictures.">
+<meta property="og:image" content="https://ducanhle156.github.io/seismic-pretraining/figures/key_findings.png">
+<meta property="og:type" content="website">
+<style>
+  :root{--ink:#1f2328;--muted:#5b6470;--line:#e6e8eb;--bg:#ffffff;--card:#f8f9fb;--teal:#1B9E77;--orange:#E4873F;--slate:#5B6C8F}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif}
+  a{color:var(--teal);text-decoration:none}a:hover{text-decoration:underline}
+  header{padding:56px 16px 20px;max-width:1120px;margin:0 auto}
+  h1{font-size:clamp(30px,4vw,44px);line-height:1.15;margin:0 0 14px;letter-spacing:-.01em}
+  .lede{font-size:20px;color:var(--muted);max-width:900px;margin:0 0 22px}
+  .pills{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
+  .pill{font-size:14px;padding:5px 12px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:var(--card)}
+  main{max-width:1120px;margin:0 auto;padding:0 16px 80px}
+  section{margin:56px 0 0}
+  h2{font-size:27px;margin:0 0 6px;letter-spacing:-.01em;display:flex;align-items:baseline;gap:12px}
+  h2 .n{flex:none;display:inline-block;width:34px;height:34px;line-height:34px;border-radius:50%;background:var(--teal);color:#fff;font-size:17px;font-weight:700;text-align:center;position:relative;top:-3px}
+  .sub{color:var(--muted);margin:0 0 18px;font-size:17px}
+  figure{margin:20px 0;padding:0}
+  figure img{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:10px;background:#fff}
+  figcaption{font-size:15px;color:var(--muted);margin-top:8px}
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}
+  @media (max-width:820px){.kpis{grid-template-columns:1fr}}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .kpi b{display:block;font-size:32px;line-height:1.1;margin-bottom:6px}
+  .kpi span{color:var(--muted);font-size:15px}
+  .answer{background:var(--card);border-left:4px solid var(--teal);border-radius:8px;padding:14px 18px;margin:16px 0}
+  .answer b{color:var(--teal)}
+  table{border-collapse:collapse;width:100%;font-size:16px;margin:14px 0}
+  th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:center}
+  th:first-child,td:first-child{text-align:left}
+  th{color:var(--muted);font-weight:600}
+  .best{color:var(--teal);font-weight:700}
+  .frame{width:100%;aspect-ratio:16/10;border:1px solid var(--line);border-radius:10px;background:#0f1218}
+  ul{padding-left:20px}li{margin:6px 0}
+  .note{font-size:15px;color:var(--muted);border-left:3px solid var(--line);padding-left:12px;margin:14px 0}
+  footer{max-width:1120px;margin:0 auto;padding:24px 16px 60px;color:var(--muted);font-size:15px;border-top:1px solid var(--line)}
+  .sw{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:5px}
+</style>
+</head>
+<body>
+<header>
+  <div class="pills">
+    <span class="pill">Self-supervised pre-training</span><span class="pill">stable-pretraining · 4 recipes</span>
+    <span class="pill">DINOv3 → seismic</span><span class="pill">Test: 3-D fault segmentation, 1 – 900 labels</span><span class="pill">Public data, controlled benchmark</span>
+  </div>
+  <h1>Self-supervised pre-training for seismic interpretation: which recipe adapts a vision foundation model, and when it pays off</h1>
+  <p class="lede">Four self-supervised recipes (I-JEPA, VISReg, DINOv2, MAE), all run as forward functions of the open <a href="https://github.com/rbalestr-lab/stable-pretraining">stable-pretraining</a> library, continue the pre-training of a web-image foundation model (DINOv3 ViT-B/16) on unlabelled sections of one public 3-D seismic survey. Fault segmentation with 1 to 900 labelled sections is the downstream test, always against a 3-D U-Net trained from scratch, on one geographically separated split, with three to five seeds per cell. No method here is new; the contribution is the controlled comparison of pre-training recipes and what it says about when unlabelled seismic data earns its cost. The story below is told in twelve pictures, in the order the work was done.</p>
+  <div class="kpis">
+    <div class="kpi"><b>MAE: rank 178 → 17</b><span>pixel-reconstruction pre-training destroys DINOv3 features within a thousand steps; latent prediction (I-JEPA) keeps them</span></div>
+    <div class="kpi"><b>+0.02 – 0.04 IoU</b><span>from seismic pre-training at 1 and 10 labelled sections, in every seed; within seed noise at 900</span></div>
+    <div class="kpi"><b>3 inlines ≈ 900</b><span>three labelled sections with the pre-trained foundation model match a 3-D U-Net trained on all 900</span></div>
+  </div>
+</header>
+
+<main>
+<section id="s1">
+  <h2><span class="n">1</span>The data: a seismic section, and the faults an expert draws on it</h2>
+  <figure><img src="figures/data_section_faults.png" alt="A Thebe test section with expert fault labels and a zoomed 512 by 512 window">
+  <figcaption>One Thebe section (3174 traces × 1537 time samples): amplitude, the expert's fault strokes in red (2.4 % of the pixels), and the 512² window at which the models work. Thebe (An et al. 2021) is a public survey with expert fault masks on every one of its 1803 sections.</figcaption></figure>
+  <div class="answer"><b>Why it is hard.</b> Faults are thin, tilted breaks that occupy a tiny fraction of the image; an interpreter still picks them by hand, section by section. Labelling is the expensive step, so the question of this study is how far unlabelled data can replace labels.</div>
+</section>
+
+<section id="s2">
+  <h2><span class="n">2</span>One survey, cut into slabs that never mix</h2>
+  <figure><img src="figures/data_split.png" alt="Map view of the Thebe survey split into contiguous train, validation and test slabs, with the labelled-section budgets">
+  <figcaption>Sections 0–899 train, 900–1099 validation, 1100–1802 test, contiguous along the survey, so the test slab is geographically separate. Pre-training sees the pictures of the 900 train sections and no labels. Labels are given on 1, 3, 10 or 900 of those same train sections (nested, evenly spread; at 1 and 3 the choice moves with the seed). Twenty validation sections pick the checkpoint; 71 test sections are scored once.</figcaption></figure>
+</section>
+
+<section id="s3">
+  <h2><span class="n">3</span>The recipe: foundation model → seismic pre-training → 3-D head</h2>
+  <figure><img src="figures/pipeline.png" alt="Pipeline: DINOv3 foundation model, self-supervised seismic pre-training on pictures only in stable-pretraining, 3-D head trained with labels on 1 to 900 sections">
+  <figcaption>Stage 1 is DINOv3 as released (web images, never saw seismic). Stage 2 continues its training on unlabelled seismic crops with one of four recipes; all four are forward functions of stable-pretraining, so they share code, views and step budget. Stage 3 runs the encoder on each section of a small sub-volume and a 3-D decoder turns the features into fault probabilities; it is the only stage that sees labels. Baseline: a 3-D U-Net trained from scratch under the same split, loss and label budgets. Control: the same 3-D head on DINOv3 without stage 2.</figcaption></figure>
+</section>
+
+<section id="s4">
+  <h2><span class="n">4</span>Watching pre-training: one recipe quietly breaks the encoder</h2>
+  <figure><img src="figures/ssl_signals.png" alt="Effective rank of patch features and fault-probe AUROC during self-supervised pre-training for the four recipes">
+  <figcaption>Two label-free signals logged during pre-training. Left: the effective rank of the patch features; MAE collapses from 178 to 17 within a thousand steps, I-JEPA climbs. Right: AUROC of an online linear fault probe on validation sections, trained on detached features so the encoder never receives a gradient from labels; MAE drops below 0.8, the other three stay at or above 0.95.</figcaption></figure>
+  <div class="answer"><b>What it means.</b> Reconstructing pixels (MAE) forces the encoder to represent local amplitude texture, exactly what DINOv3's semantic features had abstracted away, so the features degenerate. Effective rank is free to compute: log it in every run and stop a collapsing one before spending GPU hours on fine-tuning. It is a gate against collapse, not a ranking tool (it places VISReg too low).</div>
+</section>
+
+<section id="s5">
+  <h2><span class="n">5</span>Which recipe adapts DINOv3 best</h2>
+  <figure><img src="figures/encoder_ranking.png" alt="Ranking of encoders on the 2-D fault benchmark with 900 labelled sections">
+  <figcaption>2-D benchmark, 900 labelled sections, LoRA adapter, three seeds: I-JEPA-adapted DINOv3 first (ODS IoU 0.109), then VISReg (0.097), DINOv3 as released (0.093), DINOv2 (0.090); SimMIM (0.046) and MAE (0.011) fall below no adaptation. The same four recipes trained from scratch on a small ViT-S (0.034–0.050) all trail a plain 2-D U-Net (0.077). This chart uses the thin-line (skeletonised) scoring convention, so its values are about 0.1 by construction and are never compared with the 3-D IoU of steps 8–10.</figcaption></figure>
+  <div class="answer"><b>Answer.</b> Latent prediction (I-JEPA) adapts the foundation model best. Pixel reconstruction, the recipe most published seismic foundation models start from, makes a DINOv3 start worse than no adaptation at all.</div>
+</section>
+
+<section id="s6">
+  <h2><span class="n">6</span>What the adapted encoder sees</h2>
+  <figure><img src="figures/features_similarity.png" alt="Similarity of every patch to one query patch on a fault, DINOv3 as released versus seismic-adapted, on held-out test sections">
+  <figcaption>Pick one patch on a fault (cyan square) and colour every other patch of the section by feature similarity. Released DINOv3: similarity follows reflector amplitude and depth. After seismic I-JEPA pre-training: the other fault traces light up (fault-vs-other AUROC 0.70 vs 0.54). Test sections only; nothing shown was used in training.</figcaption></figure>
+  <div class="answer"><b>What it means.</b> Pre-training moves the encoder toward separating faults from stratigraphy before any label is seen. Neither encoder is a fault detector on its own; this is the prior the 3-D head builds on, and it matters most exactly when labels are too few to teach it.</div>
+</section>
+
+<section id="s7">
+  <h2><span class="n">7</span>A second survey is not a free win</h2>
+  <figure><img src="figures/corpus_effect.png" alt="Pre-training on Thebe alone versus Thebe plus Poseidon for three recipes">
+  <figcaption>Adding Poseidon (TGS open data, a different basin, AGC-gained, 8-bit) to the pre-training corpus: I-JEPA gets worse (0.109 → 0.099), VISReg better (0.097 → 0.105), DINOv2 unchanged. No mixed-corpus encoder beats I-JEPA on Thebe alone.</figcaption></figure>
+  <div class="answer"><b>Why it matters.</b> "More surveys" is the default assumption behind industrial foundation models. Here acquisition and gain differences changed what the encoder learned, so each corpus addition needs its own validation on the target survey.</div>
+</section>
+
+<section id="s8">
+  <h2><span class="n">8</span>The payoff: how many labelled sections a 3-D fault model needs</h2>
+  <figure><img src="figures/label_efficiency.png" alt="Test IoU and PR-AUC versus 1, 3, 10, 100 and 900 labelled sections for the three 3-D models">
+  <figcaption><span class="sw" style="background:var(--teal)"></span>DINOv3 + seismic I-JEPA + 3-D decoder &nbsp; <span class="sw" style="background:var(--orange)"></span>DINOv3 + 3-D decoder (no seismic pre-training) &nbsp; <span class="sw" style="background:var(--slate)"></span>3-D U-Net from scratch. Mean ± sd over three seeds (five for the DINOv3 models at three sections), 71 held-out test sections.</figcaption></figure>
+  <table>
+    <thead><tr><th>labelled sections</th><th>3-D U-Net (from scratch)</th><th>DINOv3 + 3-D decoder</th><th>DINOv3 + seismic I-JEPA + 3-D decoder</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>0.27 ± 0.02 †</td><td>0.33 ± 0.02</td><td class="best">0.36 ± 0.02</td></tr>
+      <tr><td>3</td><td>0.34 ± 0.01</td><td>0.37 ± 0.01 ‡</td><td class="best">0.38 ± 0.02 ‡</td></tr>
+      <tr><td>10</td><td>0.38 ± 0.00</td><td>0.39 ± 0.02</td><td class="best">0.42 ± 0.02</td></tr>
+      <tr><td>100</td><td>0.40 ± 0.01</td><td>0.40 ± 0.01</td><td class="best">0.41 ± 0.01</td></tr>
+      <tr><td>900 (all)</td><td>0.39 ± 0.00</td><td>0.41 ± 0.01</td><td class="best">0.41 ± 0.01</td></tr>
+    </tbody>
+  </table>
+  <p class="note">Test IoU against the raw expert mask at probability 0.5. † two seeds; the third U-Net run with one labelled section collapsed (IoU 0.075). ‡ five seeds. Dice, PR-AUC and per-seed values in <a href="tables/label_efficiency_3d.md">tables/</a>. Absolute IoU near 0.4 is normal for faults drawn as thin lines; never compare it with numbers from other papers, which use other conventions and splits.</p>
+  <div class="answer"><b>Answer.</b> Three labelled sections with the pre-trained foundation model reach the accuracy of a 3-D U-Net trained on 100 or on all 900 (0.38 vs 0.40 and 0.39); one labelled section gives a usable volume (0.36) that the U-Net only reaches with three. The foundation model wins in 14 of 15 seed pairs (the fifteenth, at 100 labels, is a tie at 0.409), and trains in 1.5 h on one H100 against 4 to 10 h for the U-Net (at 30× the parameters, so the U-Net stays cheaper to run).</div>
+</section>
+
+<section id="s9">
+  <h2><span class="n">9</span>What seismic pre-training itself adds, seed by seed</h2>
+  <figure><img src="figures/dapt_gain.png" alt="Paired per-seed gain in test IoU of seismic I-JEPA pre-training over DINOv3 as released, at each label budget">
+  <figcaption>Same labels, same seed, same 3-D head: the only difference is stage 2. Each dot is one seed.</figcaption></figure>
+  <div class="answer"><b>Answer.</b> Real when labels are scarce: +0.037 IoU with one labelled section, +0.024 with ten and +0.010 with 100, positive in every seed. With three it is smaller and depends on which sections are labelled (+0.012, four of five seeds); with 900 labels it is within seed noise (+0.006, two of three seeds). Seismic pre-training pays where labels cannot do the job. It does not replace them when they are plentiful.</div>
+</section>
+
+<section id="s10">
+  <h2><span class="n">10</span>What it looks like: one test section, 1 / 3 / 10 / 100 / 900 labels</h2>
+  <figure><img src="figures/label_scarcity_storyboard.png" alt="The same test section predicted by the 3-D U-Net and by the pre-trained DINOv3 model with 1, 3, 10, 100 and 900 labelled sections">
+  <figcaption>Test section 490 (a median section, not the best). Rows: number of labelled training sections. Columns: 3-D U-Net vs DINOv3 + seismic I-JEPA + 3-D decoder. Red = prediction, green = expert, yellow = agreement. Section IoU, U-Net vs pre-trained model: 0.30 vs 0.37 (1 label), 0.38 vs 0.41 (3), 0.41 vs 0.43 (10), 0.40 vs 0.40 (100), 0.42 vs 0.41 (900).</figcaption></figure>
+  <div class="answer"><b>Read it as a plateau, not a curve.</b> The pre-trained model gains from 1 to 3 to 10 labelled sections and nothing after that (whole test set: 0.36 → 0.38 → 0.42 → 0.41 → 0.41 at 1 / 3 / 10 / 100 / 900). On this one section even 3 and 900 look alike. The U-Net improves up to 100 (0.27 → 0.34 → 0.38 → 0.40) and is flat from there (0.39 at 900), so it meets the pre-trained model at 3 somewhere between 10 and 100 labelled sections. Both plateaus start between 10 and 100; that interval itself was not sampled.</div>
+</section>
+
+<section id="s11">
+  <h2><span class="n">11</span>In 3-D: fault surfaces from one to three labelled sections are continuous</h2>
+  <figure><img src="figures/3d_fault_surfaces.png" alt="Fault surfaces in a test sub-volume: expert annotation, 3-D U-Net with 3 labels, pre-trained DINOv3 with 1 and with 3 labels">
+  <figcaption>The same held-out sub-volume, same camera, probability 0.5: (a) expert, (b) 3-D U-Net with 3 labelled sections, (c) DINOv3 + seismic I-JEPA with 1, (d) with 3. Colour is position (crossline), not confidence.</figcaption></figure>
+  <figure>
+    <iframe class="frame" src="interactive/fault_cube.html" title="Interactive 3-D fault cube" loading="lazy"></iframe>
+    <figcaption>Interactive: drag to orbit, scroll to zoom; the buttons switch between the expert annotation, the 3-D U-Net (3 labels) and the pre-trained DINOv3 with 1 or 3 labels. <a href="interactive/fault_cube.html">Open full screen</a>.</figcaption>
+  </figure>
+  <div class="answer"><b>Where it fails.</b> The worst test sections sit at the edge of the volume, where the 3-D decoder has one-sided context, and the errors are over-predictions in low-amplitude intervals rather than missed faults. With 900 labels most of them disappear: a label-scarcity effect, not a limit of the encoder.</div>
+</section>
+
+<section id="s12">
+  <h2><span class="n">12</span>Five findings on one page</h2>
+  <figure><img src="figures/key_findings.png" alt="Five findings: 3-D regime, latent-prediction pre-training, label scarcity, effective-rank gate, corpus mixing"></figure>
+</section>
+
+<section id="limits">
+  <h2>Limits, stated once</h2>
+  <ul>
+    <li><b>One test survey.</b> The 71 evaluated sections come from Thebe alone, so paired statistics between models are optimistic and the conclusions may not transfer to another basin.</li>
+    <li><b>Baseline as published, not re-tuned.</b> The 3-D U-Net runs in the reference paper's regime at every label budget; one of its three runs with one labelled section collapsed.</li>
+    <li><b>Not a seismic foundation model.</b> A public web-image model was adapted; no weights are released here, and none of the four recipes is new.</li>
+    <li><b>Cost.</b> The foundation model wins on labels and training time, not on inference FLOPs (one ViT-B pass per section of every sub-volume).</li>
+  </ul>
+</section>
+
+<section id="engineering">
+  <h2>How it was built</h2>
+  <ul>
+    <li>The four pre-training recipes are forward functions of the open <a href="https://github.com/rbalestr-lab/stable-pretraining">stable-pretraining</a> library (rbalestr-lab), used unchanged and kept diff-free against upstream. The seismic package around it adds the data readers, view pipelines, the 3-D head, the 3-D U-Net baseline, evaluation and reporting.</li>
+    <li>About 200 PBS jobs on a shared cluster (A10 to H100) driven by a config matrix and a job planner; live registry viewer for the pre-training signals of step 4; deterministic run ids and checkpoint retention.</li>
+    <li>Every figure and table on this page is regenerated by scripts from each run's raw metrics. Numbers: <a href="tables/label_efficiency_3d.md">label efficiency</a>, <a href="tables/encoder_benchmark_2d.md">encoder benchmark</a>, <a href="tables/corpus_effect_2d.md">corpus effect</a>, <a href="tables/cost.md">cost</a>.</li>
+  </ul>
+</section>
+</main>
+<footer>
+  Seed mean ± sd on the Thebe test split. Data: Thebe (An et al. 2021, CC BY 4.0), Poseidon (TGS open data, CC BY 4.0). Foundation model: DINOv3 (Meta AI). Pre-training framework: stable-pretraining (rbalestr-lab). Nothing was tuned on the test split.
+</footer>
+</body>
+</html>
